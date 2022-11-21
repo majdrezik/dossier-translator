@@ -5,7 +5,7 @@ import os
 template_dir = os.path.abspath('templates/')
 app = Flask(__name__, template_folder=template_dir)
 
-# FLASK_APP=login.py flask run
+# FLASK_APP=server.py flask run
 
 
 @app.route("/")
