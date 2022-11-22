@@ -17,6 +17,7 @@
       display: inline-block;
       border: 1px solid #ccc;
       box-sizing: border-box;
+      background: #f1f1f1;
     }
 
     /* Set a style for all buttons */
@@ -80,7 +81,7 @@
       /* Enable scroll if needed */
       background-color: rgb(0, 0, 0);
       /* Fallback color */
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(241, 227, 227, 0.867);
       /* Black w/ opacity */
       padding-top: 60px;
     }
@@ -92,6 +93,7 @@
       /* 5% from the top, 15% from the bottom and centered */
       border: 1px solid #888;
       width: 80%;
+      height: 50%;
       /* Could be more or less, depending on screen size */
     }
 
@@ -148,23 +150,44 @@
         width: 100%;
       }
     }
+
+    #wrapper {
+      margin-left: auto;
+      margin-right: auto;
+      height: auto;
+      width: auto;
+      padding-bottom: 20px;
+    }
+
+    #inner1 {
+      /* text-align: center;
+      margin-left: auto;
+      margin-right: auto; */
+      float: left;
+      text-align: center;
+    }
+
+    #inner2 {
+      /* text-align: center;
+      clear: right;
+      margin-left: auto;
+      margin-right: auto; */
+      float: right;
+      text-align: center;
+    }
   </style>
 </head>
 
-<body>
+<body onload="document.getElementById('id01').style.display='block';" style="background-color:#f1f1f1">
 
-  <h2>Modal Login Form</h2>
+  <!-- <h2>Modal Login Form</h2> -->
 
-  <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">Login</button>
+  <!-- <button onclick="document.getElementById('id01').style.display='block'" style="width:100%;">Login</button> -->
 
   <div id="id01" class="modal">
 
     <form class="modal-content animate" action="/action_page.php" method="post">
-      <div class="imgcontainer">
-        <span onclick="document.getElementById('id01').style.display='none'" class="close"
-          title="Close Modal">&times;</span>
-        <img src="img_avatar2.png" alt="Avatar" class="avatar">
-      </div>
+      <h1 style="text-align:center;">Dossier Translator</h1>
 
       <div class="container">
         <label for="uname"><b>Username</b></label>
@@ -179,15 +202,21 @@
         </label>
       </div>
 
-      <div class="container" style="background-color:#f1f1f1">
-        <button type="button" onclick="document.getElementById('id01').style.display='none'"
-          class="cancelbtn">Cancel</button>
-        <span class="psw">Forgot <a href="#">password?</a></span>
+      <div class="container" style="background-color:#f1f1f1" id="wrapper">
+        <div id="wrapper">
+          <span id="inner1">
+            <a href="/resetPassword">Forgot password?</a>
+          </span>
+          <span id="inner2">Don't have an account?
+            <a href="/signup">Create account</a>
+          </span>
+        </div>
       </div>
+      <!-- </div> -->
     </form>
   </div>
 
-  <script>
+  <!-- <script>
     // Get the modal
     var modal = document.getElementById('id01');
 
@@ -197,7 +226,10 @@
         modal.style.display = "none";
       }
     }
-  </script>
+  </script> -->
+  <!-- <script>
+    window.location.host
+  </script> -->
 
 </body>
 
