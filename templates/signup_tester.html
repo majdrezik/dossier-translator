@@ -2,7 +2,13 @@
 <html>
 
 <head>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
 </head>
 <style>
@@ -19,7 +25,7 @@
   input[type=password] {
     width: 100%;
     padding: 15px;
-    margin: 5px 0 22px 0;
+    margin: 10px 0 10px 0;
     display: inline-block;
     border: none;
     background: #f1f1f1;
@@ -63,7 +69,7 @@
 
   /* Add padding to container elements */
   .container {
-    padding: 16px;
+    padding: 100px;
   }
 
   /* The Modal (background) */
@@ -72,7 +78,7 @@
     /* Hidden by default */
     position: fixed;
     /* Stay in place */
-    z-index: 1;
+    z-index: 0;
     /* Sit on top */
     left: 0;
     top: 0;
@@ -83,16 +89,16 @@
     overflow: auto;
     /* Enable scroll if needed */
     background-color: rgba(241, 227, 227, 0.867);
-    padding-top: 50px;
+
   }
 
   /* Modal Content/Box */
   .modal-content {
     background-color: #fefefe;
-    margin: 5% auto 15% auto;
+    margin: 0% auto 0% auto;
     /* 5% from the top, 15% from the bottom and centered */
     border: 1px solid #888;
-    width: 100%;
+    width: 80%;
     /* Could be more or less, depending on screen size */
   }
 
@@ -166,15 +172,25 @@
   <div id="id01" class="modal">
     <!-- <span onclick="document.getElementById('id01').style.display='none'" class="close"
       title="Close Modal">&times;</span> -->
-    <form class="modal-content" action="/login" style="width: 100%">
+    <form class="modal-content" action="/tester_homepage" style="width: 100%">
+      <div class="alert alert-success" role="alert" id="alert_success"
+        style="display:none ; z-index: 2; width: 100%; padding-left: auto;padding-right: auto;">
+        Signed up successfully
+      </div>
       <div class="float-container">
         <div class="float-child1">
           <div class="" style="width: 90%;">
             <h1>Sign Up as Tester</h1>
             <p>Please fill in this form to create an account.</p>
             <hr>
+            <label for="full_name"><b>Full Name</b></label>
+            <input type="text" placeholder="John Doe" name="full_name" required>
+
             <label for="email"><b>Email</b></label>
             <input type="text" placeholder="Enter Email" name="email" required>
+
+            <label for="age"><b>Age</b></label>
+            <input type="text" placeholder="Enter your age" name="age" required>
 
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="psw" required>
@@ -224,8 +240,8 @@
 
       <!-- End side dropdown -->
       <div class="clearfix">
-        <button type="button" onclick="signup_result(0)" class="cancelbtn">Cancel</button>
-        <button type="submit" class="signupbtn" onclick="signup_result(1)">Sign Up</button>
+        <button type="button" onclick="cancel()" class="cancelbtn">Cancel</button>
+        <button type="submit" class="signupbtn" onclick="signup()">Sign Up</button>
       </div>
     </form>
   </div>
@@ -238,30 +254,45 @@
   </div> -->
 
 </body>
+
 <script>
 
-  function signup_result(signal) {
-    if (signal == 1) { //success
-      show_alert(1)
-      console.log("success")
-    } else show_alert(0)
-    window.location.href = "/login"
+  function signup() {
+    //show_alert()
+    show_success_alert()
+    delay(3000);
+    window.location.href = "/tester_homepage"
   }
+
+  function cancel(params) {
+    show_alert()
+    window.location.href = "/"
+  }
+
 
   function show_alert(param) {
-    if (param == 1) //success
-      show_success_alert()
-    else show_fail_alert() //fail
+
+  }
+  function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
   }
 
+
   function show_success_alert() {
-    // <div class="alert alert-success d-flex align-items-center" role="alert">
-    //   <svg class="bi flex-shrink-0 me-2" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill" /></svg>
-    //   <div>
-    //     An example success alert with an icon
-    //   </div>
-    // </div>
+    var aler_success = document.getElementById("alert_success")
+    if (aler_success.style.display === "none") {
+      aler_success.style.display = "block";
+      // delay(1000)
+      //   .then(
+      //     () => aler_success.style.display === "none"
+      //   )
+      setTimeout(function () {
+        $('#alert_success').fadeOut('fast');
+      }, 1500);
+    }
+    aler_success.style.display === "none"
   }
 </script>
+
 
 </html>
