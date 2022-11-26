@@ -75,12 +75,13 @@ def signup_tester():
 
 @app.route("/user_homepage")
 def user_homepage():
-    return "hello user"
+    return render_template('upload_file.html')
 
 
 @app.route("/tester_homepage")
 def tester_homepage():
     return "hello tester"
+
 
 
 @app.route('/test', methods=['GET'])
