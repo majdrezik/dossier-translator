@@ -5,57 +5,88 @@
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script> 
 
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <style>
     body {
+    	padding-top:250px;
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgba(241, 227, 227, 0.867);
   }
 
-       /* * {
-    box-sizing: border-box;
-  }*/
-        .custom-search {
-      position: relative;
-    }
-    .custom-search-input {
-      width: 60%;
-      padding-right: 100px !important; 
-      box-sizing: border-box;
-    }
-    .custom-search-botton {
-      position: absolute;
-      right: 3px; 
-      top: 3px;
-      bottom: 3px;
-      line-height: 1 !important;
-      z-index: 4;
-    }
     .container {
-    padding: auto; /*change it to auto*/
+    padding: 16px; 
     background-color: white;
     border :1px solid black;
-    margin:auto;
-  }
+      }
+  .Name {
+	text-align:center;
+	display: inline-block;
+	width:47%;}
+.Name .cf-medium {
+	width:97%;}
+
+.img {
+  vertical-align: baseline;
+}
+
+.img1{
+  vertical-align: text-bottom;
+}
 
 </style>
+
 <body>
     <div class="container">
         <h1>Upload Files</h1>
         <p>Please upload the file/document that you want to translate and
             select the language that you want to translate from and to.</p>
            
-            <div class="input-group custom-search">
-                <input type="text" class="form-control custom-search-input" placeholder="Click here to upload documents">
-                <button  style="background:rgb(150, 147, 147)" class="btn btn-primary custom-search-botton" type="submit">Upload</button>  
+            <div class="input-group mb-3">
+			<input class="img1" type="image" src="http://cdn.onlinewebfonts.com/svg/img_150954.png" alt="Submit" style="float:left" width="30" height="30">
+              <input type="text" class="form-control" placeholder="Click here to upload documents" aria-label="upload documents" aria-describedby="button-addon2">         
+			  <button style="background:rgb(214, 212, 212); color:black; width:15%;" class="btn btn-outline-secondary" type="button" id="button-addon2">Upload</button>
+            </div>
+              <br>
+              <div class="dropdown">
+                <form class='Name'>
+                  <b><img title="Choose a language you want to translate from" class="img" src="https://icons.veryicon.com/png/o/miscellaneous/epc/warning-52.png" width="13" height="13">From:</b>
+                <button style="background:rgb(214, 212, 212); color:black; width:30%;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Language
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#">English</a></li>
+                  <li><a class="dropdown-item" href="#">Russian</a></li>
+                  <li><a class="dropdown-item" href="#">Ukrainian</a></li>
+                  <li><a class="dropdown-item" href="#">Hebrew</a></li>
+                </ul>
+              </form>
+              <form class='Name cf-medium'>
+                <b><img title="Choose a language you want to translate to" class="img" src="https://icons.veryicon.com/png/o/miscellaneous/epc/warning-52.png" width="13" height="13">To:</b>
+              <button style="background:rgb(214, 212, 212); color:black; width:30%;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Language
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">English</a></li>
+                <li><a class="dropdown-item" href="#">Russian</a></li>
+                <li><a class="dropdown-item" href="#">Ukrainian</a></li>
+                <li><a class="dropdown-item" href="#">Hebrew</a></li>
+              </ul>
+            </form>
               </div>
               <br>
               <br>
-            
-
-              
+              <br>
+              <form style="text-align:center;">
+                <button style="background:rgb(214, 212, 212); color:black; margin: 20px;">Translate</button>
+                <button style="background:rgb(214, 212, 212); color:black; margin: 20px;">Translate & Check</button>
+                <br>
+              </form>
     </div>
     
-
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 </body>
 </html>
