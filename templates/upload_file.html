@@ -11,7 +11,7 @@
 </head>
 <style>
     body {
-    	padding-top:250px;
+    padding-top: 9%;
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgba(241, 227, 227, 0.867);
   }
@@ -36,6 +36,12 @@
   vertical-align: text-bottom;
 }
 
+.topright {
+  position: absolute;
+  top: 18%;
+  right: 18.9%;
+}
+
 </style>
 
 <body>
@@ -43,50 +49,94 @@
         <h1>Upload Files</h1>
         <p>Please upload the file/document that you want to translate and
             select the language that you want to translate from and to.</p>
-           
+            <form class='topright'>
+              <button style="background:rgb(214, 212, 212); color:black; width:200%;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                User
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Setting</a></li>
+                <li><a class="dropdown-item" href="#" onclick="Archive()">Archive</a></li>
+                <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+              </ul>
+            </form>
             <div class="input-group mb-3">
 			<input class="img1" type="image" src="http://cdn.onlinewebfonts.com/svg/img_150954.png" alt="Submit" style="float:left" width="30" height="30">
               <input type="text" class="form-control" placeholder="Click here to upload documents" aria-label="upload documents" aria-describedby="button-addon2">         
-			  <button style="background:rgb(214, 212, 212); color:black; width:15%;" class="btn btn-outline-secondary" type="button" id="button-addon2">Upload</button>
-            </div>
+              <button style="background:rgb(214, 212, 212); color:black; width:15%; border-radius: 4px;" class="btn btn-outline-secondary btn btn-primary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Upload</button>
+            
+              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="staticBackdropLabel">Upload a document</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body modal-footer">
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal">From Device</button>
+                  <button type="button" class="btn btn-primary" onclick="Archive()">From Archive</button>
+                  </div>
+                </div>
+                </div>
+              </div>
+      
+      </div>
               <br>
               <div class="dropdown">
                 <form class='Name'>
-                  <b><img title="Choose a language you want to translate from" class="img" src="https://icons.veryicon.com/png/o/miscellaneous/epc/warning-52.png" width="13" height="13">From:</b>
-                <button style="background:rgb(214, 212, 212); color:black; width:30%;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Language
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="#">English</a></li>
-                  <li><a class="dropdown-item" href="#">Russian</a></li>
-                  <li><a class="dropdown-item" href="#">Ukrainian</a></li>
-                  <li><a class="dropdown-item" href="#">Hebrew</a></li>
-                </ul>
+                  <img title="Choose a language you want to translate from" class="img" src="https://icons.veryicon.com/png/o/miscellaneous/epc/warning-52.png" width="13" height="13">
+                  <b><label for="language">From:</label></b>
+                  <select style="background:rgb(214, 212, 212); color:black; width:30%; padding:1%; border-radius: 4px;" name="language" id="language">
+                    <option style="background:white; background:rgb(17, 111, 252);" value="language"></option>
+                    <option style="background:white;" value="English">English</option>
+                    <option style="background:white;" value="Russian">Russian</option>
+                    <option style="background:white;" value="Ukrainian">Ukrainian</option>
+                    <option style="background:white;" value="Hebrew">Hebrew</option>
+                  </select>
               </form>
               <form class='Name cf-medium'>
-                <b><img title="Choose a language you want to translate to" class="img" src="https://icons.veryicon.com/png/o/miscellaneous/epc/warning-52.png" width="13" height="13">To:</b>
-              <button style="background:rgb(214, 212, 212); color:black; width:30%;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Language
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">English</a></li>
-                <li><a class="dropdown-item" href="#">Russian</a></li>
-                <li><a class="dropdown-item" href="#">Ukrainian</a></li>
-                <li><a class="dropdown-item" href="#">Hebrew</a></li>
-              </ul>
+                <img title="Choose a language you want to translate to" class="img" src="https://icons.veryicon.com/png/o/miscellaneous/epc/warning-52.png" width="13" height="13">
+                <b><label for="language">To:</label></b>
+                <select style="background:rgb(214, 212, 212); color:black; width:30%; padding:1%; border-radius: 4px;" name="language" id="language">
+                  <option style="background:white;" value="language"></option>
+                  <option style="background:white;" value="English">English</option>
+                  <option style="background:white;" value="Russian">Russian</option>
+                  <option style="background:white;" value="Ukrainian">Ukrainian</option>
+                  <option style="background:white;" value="Hebrew">Hebrew</option>
+                </select>
             </form>
               </div>
               <br>
               <br>
               <br>
-              <form style="text-align:center;">
-                <button style="background:rgb(214, 212, 212); color:black; margin: 20px;">Translate</button>
-                <button style="background:rgb(214, 212, 212); color:black; margin: 20px;">Translate & Check</button>
+              <div style="text-align:center;">
+                <button style="background:rgb(214, 212, 212); color:black; margin: 20px;" onclick="exportpage()">Translate</button>
+                <button style="background:rgb(212, 212, 214); color:black; margin: 20px;">Translate & Check</button>
                 <br>
-              </form>
+              </div>
     </div>
     
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-</body>
+
+    <script>
+      function Archive() {
+      window.location.href = "/archivepage"
+    }
+
+    function logout() {
+      window.location.href = "/"
+    }
+
+    function exportpage() {
+      window.location.href = "/exportpage"
+    }
+
+    </script>
+
+
+
+
+
+
+  </body>
 </html>

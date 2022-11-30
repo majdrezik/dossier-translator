@@ -82,6 +82,13 @@ def user_homepage():
 def tester_homepage():
     return "hello tester"
 
+@app.route("/archivepage")
+def archivepage():
+    return "hello archive"
+
+@app.route("/exportpage")
+def exportpage():
+    return render_template('Export_page.html')
 
 
 @app.route('/test', methods=['GET'])
