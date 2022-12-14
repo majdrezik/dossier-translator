@@ -84,7 +84,7 @@ def tester_homepage():
 
 @app.route("/archivepage")
 def archivepage():
-    return "hello archive"
+    return render_template('Archive.html')
 
 @app.route("/exportpage")
 def exportpage():
