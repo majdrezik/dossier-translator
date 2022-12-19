@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://requirejs.org/docs/release/2.3.5/minified/require.js"></script>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <div class="list-group" id="list">
+    <a href="#" class="list-group-item list-group-item-action active">
+      Cras justo odio
+    </a>
+    <a href="#" class="list-group-item list-group-item-action"><button onclick="loadTextFiles()">ac facilisis
+        in</button> </a>
+    <a href="#" class="list-group-item list-group-item-action"><button onclick="loadTextFiles()">ac facilisis
+        in</button></a>
+    <a href="#" class="list-group-item list-group-item-action"><button onclick="loadTextFiles()">ac facilisis
+        in</button></a>
+    <a href="#" class="list-group-item list-group-item-action disabled"><button onclick="loadTextFiles()">ac facilisis
+        in</button></a>
+  </div>
+
+  <table class="table table-striped" id="table" style="display: none">
+    <tr>
+      <td>
+        <div>Original</div>
+      </td>
+      <td>
+        <div>Translation</div>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <div>I'm editable</div>
+      </td>
+      <td>
+        <div contenteditable>I'm also editable</div>
+      </td>
+    </tr>
+  </table>
+</body>
+
+<script type="text/javascript">
+
+
+  window.onload = function () {
+    loadTextFiles()
+
+  };
+
+  // function loadLinesFromFile(filePath) {
+  //   const readline = require('readline');
+  //   var user_file = filePath; //'test/translation.txt';
+  //   var lines = []
+  //   var r = readline.createInterface({
+  //     input: f.createReadStream(user_file)
+  //   });
+  //   r.on('line', function (text) {
+  //     console.log(text);
+  //     lines.push(text)
+  //   });
+  //   return lines;
+  // }
+
+  function handleFiles(input) {
+
+    // const file = input.target.files[0];
+    // const reader = new FileReader();
+    // var lines = []
+    // reader.onload = (event) => {
+    //   const file = event.target.result;
+    //   const allLines = file.split("\r?\n");
+    //   // Reading line by line
+    //   allLines.forEach((line) => {
+    //     console.log(line);
+    //     lines.push(line);
+    //   });
+    // };
+
+    // reader.onerror = (event) => {
+    //   alert(event.target.error.name);
+    // };
+
+    // reader.readAsText(file);
+    const fs = require('fs');
+    fs.readFile(input, (err, data) => {
+      if (err) throw err;
+
+      console.log(data.toString());
+    });
+
+    return lines;
+  }
+
+  function loadTextFiles() {
+
+    console.log("loadTextFiles activated")
+    // var original_lines = loadLinesFromFile('../test/original.txt') // array of lines
+    // var translated_lines = loadLinesFromFile('../test/translated.txt') // array of lines
+    var original_lines = handleFiles('../test/original.txt') // array of lines
+    var translated_lines = handleFiles('../test/translated.txt') // array of lines
+    table = document.getElementById('table')
+    table.style.display = "block";
+    var list = document.getElementById('list')
+    list.style.display = "none";
+    if (original_lines.length != translated_lines.length) {
+      console.log("Length mismatch between original file and translated file!")
+      return;
+    }
+    // for (var i = 0; i < original_lines.length; i++) { // '<tr><td>' + original_lines[i] + '</td><td>' +
+    translated_lines[i] + '</td></tr>' // table.innerHTML +=line // } for (var i=0; i < original_lines.length; i++) { var
+    row = table.insertRow(); var cell1 = row.insertCell(0); var cell2 = row.insertCell(1); cell1.innerHTML = original_lines[i];
+    cell2.innerHTML = translated_lines[i];
+  }
+
+</script>
+
+
+</html>
