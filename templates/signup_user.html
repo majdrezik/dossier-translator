@@ -8,7 +8,7 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
+  
 </head>
 <style>
   body {
@@ -141,7 +141,7 @@
   }
 </style>
 
-<body onload="document.getElementById('id01').style.display='block';">
+<body onload="document.getElementById('id01').style.display='block';" >
 
 
   <!-- <div class="alert alert-success d-flex align-items-center" id="alert_success" role="alert"
@@ -175,19 +175,19 @@
         <p>Please fill in this form to create an account.</p>
         <hr>
         <label for="full_name"><b>Full Name</b></label>
-        <input type="text" placeholder="Enter Name" name="full_name" required>
+        <input type="text" placeholder="Enter Name" name="name" pattern="[A-Za-z ]+" required>
 
         <label for="email"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" required>
+        <input id="email" type="text" placeholder="Enter Email" name="email" required>
 
         <label for="age"><b>Age</b></label>
-        <input type="text" placeholder="Enter your age" name="age" required>
+        <input id="age1" type="text" placeholder="Enter your age" name="age" pattern="[0-9]*" required>
 
         <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" name="psw" required>
+        <input id="password" type="password" placeholder="Enter Password" name="psw" required>
 
         <label for="psw-repeat"><b>Repeat Password</b></label>
-        <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+        <input id="Repassword" type="password" placeholder="Repeat Password" name="psw-repeat" required>
 
         <label>
           <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
@@ -197,7 +197,7 @@
 
         <div class="clearfix">
           <button type="button" onclick="cancel()" class="cancelbtn">Cancel</button>
-          <button type="submit" class="signupbtn" onclick="signup()">Sign Up</button>
+          <button type="submit" class="signupbtn" onclick="someFunc()">Sign Up</button>
         </div>
       </div>
     </form>
@@ -240,6 +240,79 @@
       }
       aler_success.style.display === "none"
     }
+
+    /***************validation*****************/
+
+    /*empty fields validation*/
+    function notEmptyCheck(name)
+      {
+      if (name.value.length == 0)
+            { 
+              //alert("Name can not be empty.");
+              return false; 
+            }  	
+            return true; 
+      } 
+
+function someFunc() {
+  notEmptyCheck(name);
+  signup();
+  Age();
+  validateEmail();
+  validatePassword();
+}
+
+/*age validation*/
+function Age(){  //doesn't work!
+  var x=document.getElementById('age1').value;
+  x= parseInt(x,10);
+  if (!(x>1 && x<100))
+  { 
+    alert("The age must be a number between 1 and 100");
+    return false;
+  }
+  return true;
+}
+
+/*email validation*/
+function validateEmail() {
+    // Get the email value
+    var email = document.getElementById('email').value;
+    // Check that the email is in a valid format
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      alert('Invalid email address');
+      return false;
+    }
+    return true;
+  }
+  document.getElementById('email').addEventListener('blur', validateEmail);
+
+
+  /*password validation*/
+  function validatePassword() {
+    var password = document.getElementById('password').value;
+    var Repassword = document.getElementById('Repassword').value;
+  
+    if (password.length < 8) {
+      alert('Password must be at least 8 characters long');
+      return false;
+    }
+    if (!password.match(/\d/)) {
+    alert("Password must contain at least one number");
+    return false;
+  }
+  if (!password.match(/[^A-Za-z0-9]/)) {
+    alert("Password must contain at least one special character");
+    return false;
+  }
+  if (password !== Repassword) {
+    alert("Passwords do not match");
+    return false;
+   }
+    return true;
+  }
+  document.getElementById('password').addEventListener('blur', validatePassword);
+
   </script>
 
 </body>
