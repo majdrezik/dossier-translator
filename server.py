@@ -84,8 +84,7 @@ def user_homepage():
 
 @app.route("/tester_homepage")
 def tester_homepage():
-    return "hello tester"
-
+    return render_template('waiting_documents.html')
 
 @app.route("/archivepage")
 def archivepage():
@@ -95,6 +94,11 @@ def archivepage():
 @app.route("/exportpage")
 def exportpage():
     return render_template('Export_page.html')
+
+@app.route("/testerchecktranslation")
+def checkingpage():
+    return render_template('tester_check_translation.html')
+
 
 
 @app.route('/test', methods=['GET'])

@@ -175,19 +175,19 @@
         <p>Please fill in this form to create an account.</p>
         <hr>
         <label for="full_name"><b>Full Name</b></label>
-        <input type="text" placeholder="Enter Name" name="name" pattern="[A-Za-z ]+" required>
+        <input type="text" placeholder="Enter Name" name="name" pattern="[A-Za-z ]+" oninvalid="alert('Please enter a valid name');" required>
 
         <label for="email"><b>Email</b></label>
         <input id="email" type="text" placeholder="Enter Email" name="email" required>
 
-        <label for="age"><b>Age</b></label>
-        <input id="age1" type="text" placeholder="Enter your age" name="age" pattern="[0-9]*" required>
+        <label for="age1"><b>Age</b></label>
+        <input id="age1" type="text" placeholder="Enter your age" name="age1" pattern="[0-9]*" required>
 
-        <label for="psw"><b>Password</b></label>
-        <input id="password" type="password" placeholder="Enter Password" name="psw" required>
+        <label for="password"><b>Password</b></label>
+        <input id="password" type="password" placeholder="Enter Password" name="password" required>
 
-        <label for="psw-repeat"><b>Repeat Password</b></label>
-        <input id="Repassword" type="password" placeholder="Repeat Password" name="psw-repeat" required>
+        <label for="Repassword"><b>Repeat Password</b></label>
+        <input id="Repassword" type="password" placeholder="Repeat Password" name="Repassword" required>
 
         <label>
           <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
@@ -260,10 +260,11 @@ function someFunc() {
   Age();
   validateEmail();
   validatePassword();
+  Repassword();
 }
 
 /*age validation*/
-function Age(){  //doesn't work!
+function Age(){  
   var x=document.getElementById('age1').value;
   x= parseInt(x,10);
   if (!(x>1 && x<100))
@@ -273,6 +274,9 @@ function Age(){  //doesn't work!
   }
   return true;
 }
+document.getElementById('age1').addEventListener('blur', Age);
+
+
 
 /*email validation*/
 function validateEmail() {
@@ -291,8 +295,7 @@ function validateEmail() {
   /*password validation*/
   function validatePassword() {
     var password = document.getElementById('password').value;
-    var Repassword = document.getElementById('Repassword').value;
-  
+    
     if (password.length < 8) {
       alert('Password must be at least 8 characters long');
       return false;
@@ -305,13 +308,22 @@ function validateEmail() {
     alert("Password must contain at least one special character");
     return false;
   }
-  if (password !== Repassword) {
-    alert("Passwords do not match");
-    return false;
-   }
     return true;
   }
   document.getElementById('password').addEventListener('blur', validatePassword);
+
+function Repassword(){
+  var password = document.getElementById('password').value;
+    var Repassword = document.getElementById('Repassword').value;
+  if (password !== Repassword) {
+    alert("Passwords do not match");
+    } else {
+      console.log("Passwords match");
+    }
+}
+document.getElementById('Repassword').addEventListener('blur', Repassword);
+
+
 
   </script>
 
