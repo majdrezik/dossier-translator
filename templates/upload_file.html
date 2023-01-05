@@ -59,62 +59,73 @@
                 <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
               </ul>
             </form>
-            <div class="input-group mb-3">
+           <!-- <div class="input-group mb-3">
 			<input class="img1" type="image" src="http://cdn.onlinewebfonts.com/svg/img_150954.png" alt="Submit" style="float:left" width="30" height="30">
               <input type="text" class="form-control" placeholder="Click here to upload documents" aria-label="upload documents" aria-describedby="button-addon2">         
               <button style="color:white; width:15%; border-radius: 4px;" class="btn btn-outline-secondary btn btn-primary" type="button" id="button-addon2" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Upload</button>
             
-              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+             <!-- <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                  <div class="modal-header">
+                 <!-- <div class="modal-header">
                   <h1 class="modal-title fs-5" id="staticBackdropLabel">Upload a document</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>-->
+				  <b><label style='font-size: 20px;'>Choose one option to upload file:</label><b>
+                  <div class="modal-body modal-footer" >
+					<!--<input id='fileid' type='file' hidden/>-->
+					
+					
+				  </div>
+				  <div style="text-align:center;">
+					<b><label>From Device:</label><b>
+					<input data-bs-dismiss="modal" id='buttonid' type='file'  />
+					<!-- <input class="btn btn-primary"  data-bs-dismiss="modal" id='buttonid' type='file'  />-->
+					</div>
+					<br>
+				  <div style="text-align:center;">
+						<b><label>From Archive:</label></b>
+					<input data-bs-dismiss="modal" id='buttonid' type='file' onclick="Archive()" />
                   </div>
-                  <div class="modal-body modal-footer">
-                    <input id='fileid' type='file' hidden/>
-                    <input class="btn btn-primary" data-bs-dismiss="modal" id='buttonid' type='button' value='From Device' />
-                    <input class="btn btn-primary" data-bs-dismiss="modal" id='buttonid' type='button' value='From Archive' onclick="Archive()" />
-                  </div>
+               <!-- </div>
                 </div>
-                </div>
-              </div>
-      
-      </div>
-              <br>
+              </div>-->
+            <br>
+			<br>
               <div class="dropdown">
-                <form class='Name'>
+                <form style="text-align:center;">
                   <img title="Choose a language you want to translate from" class="img" src="https://icons.veryicon.com/png/o/miscellaneous/epc/warning-52.png" width="13" height="13">
-                  <b><label for="language">From:</label></b>
-                  <select style="background:rgb(214, 212, 212); color:black; width:30%; padding:1%; border-radius: 4px;" name="language" id="language">
-                    <option style="background:white; background:rgb(17, 111, 252);" value="language"></option>
+                  <b><label for="language1">From:</label></b>
+                  <select style="background:rgb(214, 212, 212); color:black; width:20%; padding:1%; border-radius: 4px; margin: 2em;" name="name" id="language1" required>
+                   <option style="background:white; background:rgb(17, 111, 252);" value=""></option>
                     <option style="background:white;" value="English">English</option>
                     <option style="background:white;" value="Russian">Russian</option>
                     <option style="background:white;" value="Ukrainian">Ukrainian</option>
                     <option style="background:white;" value="Hebrew">Hebrew</option>
                   </select>
-              </form>
-              <form class='Name cf-medium'>
-                <img title="Choose a language you want to translate to" class="img" src="https://icons.veryicon.com/png/o/miscellaneous/epc/warning-52.png" width="13" height="13">
-                <b><label for="language">To:</label></b>
-                <select style="background:rgb(214, 212, 212); color:black; width:30%; padding:1%; border-radius: 4px;" name="language" id="language">
-                  <option style="background:white;" value="language"></option>
+                  
+                  <img title="Choose a language you want to translate to" class="img" src="https://icons.veryicon.com/png/o/miscellaneous/epc/warning-52.png" width="13" height="13">
+                <b><label for="language2">To:</label></b>
+                <select style="background:rgb(214, 212, 212); color:black; width:20%; padding:1%; border-radius: 4px; margin: 2em;" name="name" id="language2" required>
+                 <option style="background:white; background:rgb(17, 111, 252);" value=""></option>
+				          <option style="background:white;" value="Russian">Russian</option>
                   <option style="background:white;" value="English">English</option>
-                  <option style="background:white;" value="Russian">Russian</option>
                   <option style="background:white;" value="Ukrainian">Ukrainian</option>
                   <option style="background:white;" value="Hebrew">Hebrew</option>
                 </select>
-            </form>
-              </div>
-              <br>
-              <br>
-              <br>
-              <div style="text-align:center;">
-                <button style="background-color: #04AA6D; color:white; width:30%; padding:1%; border-radius: 4px; border :1px solid black;" onclick="exportpage()">Translate</button>
+                  <br>
+                  <br>
+                <div style="text-align:center;">
+                <button style="background-color: #04AA6D; color:white; width:30%; padding:1%; border-radius: 4px; border :1px solid black;" onclick="someFunctions()">Translate</button>
                 <button style="background-color: #04AA6D; color:white; width:30%; padding:1%; border-radius: 4px; border :1px solid black;">Translate & Check</button>
                 <br>
               </div>
+        
+
+              </form>
     </div>
+      </div>
+        
     
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
@@ -140,13 +151,21 @@
       window.location.href = "/exportpage"
     }
 
+///////////////does'nt work!!////////////////////
+   function notEmptyCheck(name)
+      {
+      if (name.value.length == 0)
+            { 
+              return false; 
+            }  	
+            return true; 
+      } 
 
-
+      function someFunctions(){
+        notEmptyCheck(name);
+        exportpage();
+      }
     </script>
-
-
-
-
 
 
   </body>

@@ -184,8 +184,12 @@
             <p>Please fill in this form to create an account.</p>
             <hr>
             <label for="full_name"><b>Full Name</b></label>
+<<<<<<< Updated upstream
 
             <input type="text" placeholder="Enter Name" name="name" pattern="[A-Za-z ]+" oninvalid="alert('Please enter a valid name');" required>
+=======
+            <input type="text" placeholder="Enter Name" name="name" pattern="[A-Za-z ]+" required>
+>>>>>>> Stashed changes
 
 
             <label for="email"><b>Email</b></label>
@@ -206,7 +210,7 @@
               <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
             </label>
 
-            <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
+            <!--<p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>-->
           </div>
         </div>
 
@@ -343,7 +347,7 @@ function validateEmail() {
     // Get the email value
     var email = document.getElementById('email').value;
     // Check that the email is in a valid format
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+    if (!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email)) {
       alert('Invalid email address');
       return false;
     }
@@ -403,12 +407,6 @@ function validateCheckboxes() { //dosn't work!!!!!!
     }
   }
   
-
-  
-
-
-
-
 
 
 </script>
