@@ -1,0 +1,15 @@
+docker image build -t doss_app .
+docker run --name doss_app_container -p 8080:8080 -it --rm doss_app
+
+
+
+
+
+works:	docker image build -t doss_app .
+works: 	docker run --name doss_app_container -p 8080:8080 -d doss_app
+		docker run --name doss_app_container -p 8080:8080 -it --rm doss_app
+		
+
+FLASK_APP=server.py flask run --host 0.0.0.0 --port 8080
+
+

@@ -185,15 +185,16 @@
             <hr>
             <label for="full_name"><b>Full Name</b></label>
 
-            <input type="text" placeholder="Enter Name" name="name" pattern="[A-Za-z ]+" oninvalid="alert('Please enter a valid name');" required>
+            <input id="username" type="text" placeholder="Enter Name" name="name" pattern="[A-Za-z ]+"
+              oninvalid="alert('Please enter a valid name');" required>
 
 
             <label for="email"><b>Email</b></label>
             <input id="email" type="text" placeholder="Enter Email" name="email" required>
 
 
-            <label for="age1"><b>Age</b></label>
-            <input id="age1" type="text" placeholder="Enter your age" name="age1" pattern="[0-9]*" required>
+            <label for="age"><b>Age</b></label>
+            <input id="age" type="text" placeholder="Enter your age" name="age" pattern="[0-9]*" required>
 
 
             <label for="psw"><b>Password</b></label>
@@ -213,7 +214,7 @@
         <div class="float-child2">
           <!-- side dropdown -->
           <h3>Choose Language/s</h3>
-          <div class="form-check form-switch">
+          <div class="form-check form-switch" id="test_id">
             <input class="form-check-input" type="checkbox" id="checkbox1">
             <label class="form-check-label" for="checkbox1">Arabic</label>
           </div>
@@ -237,7 +238,7 @@
             <input class="form-check-input" type="checkbox" id="checkbox5">
             <label class="form-check-label" for="checkbox5">Ukranian</label>
           </div>
-       
+
         </div>
       </div>
 
@@ -299,47 +300,44 @@
 
   /***************validation*****************/
 
-    /*empty fields validation*/
-    function notEmptyCheck(name)
-      {
-      if (name.value.length == 0)
-            { 
-              //alert("Name can not be empty.");
-              return false; 
-            }  	
-            return true; 
-      } 
-
-function someFunc() {
-  notEmptyCheck(name);
-  signup();
-  Age();
-  validateEmail();
-  validatePassword();
-
-  Repassword();
-  validateCheckboxes();
-}
-
-/*age validation*/
-function Age(){  
-
-  var x=document.getElementById('age1').value;
-  x= parseInt(x,10);
-  if (!(x>1 && x<100))
-  { 
-    alert("The age must be a number between 1 and 100");
-    return false;
+  /*empty fields validation*/
+  function notEmptyCheck(name) {
+    if (name.value.length == 0) {
+      //alert("Name can not be empty.");
+      return false;
+    }
+    return true;
   }
-  return true;
-}
 
-document.getElementById('age1').addEventListener('blur', Age);
+  function someFunc() {
+    notEmptyCheck(name);
+    signup();
+    Age();
+    validateEmail();
+    validatePassword();
+
+    Repassword();
+    validateCheckboxes();
+  }
+
+  /*age validation*/
+  function Age() {
+
+    var x = document.getElementById('age').value;
+    x = parseInt(x, 10);
+    if (!(x > 1 && x < 100)) {
+      alert("The age must be a number between 1 and 100");
+      return false;
+    }
+    return true;
+  }
+
+  document.getElementById('age').addEventListener('blur', Age);
 
 
 
-/*email validation*/
-function validateEmail() {
+  /*email validation*/
+  function validateEmail() {
     // Get the email value
     var email = document.getElementById('email').value;
     // Check that the email is in a valid format
@@ -357,54 +355,54 @@ function validateEmail() {
     var password = document.getElementById('password').value;
 
     var Repassword = document.getElementById('Repassword').value;
-  
+
 
     if (password.length < 8) {
       alert('Password must be at least 8 characters long');
       return false;
     }
     if (!password.match(/\d/)) {
-    alert("Password must contain at least one number");
-    return false;
-  }
-  if (!password.match(/[^A-Za-z0-9]/)) {
-    alert("Password must contain at least one special character");
-    return false;
-  }
+      alert("Password must contain at least one number");
+      return false;
+    }
+    if (!password.match(/[^A-Za-z0-9]/)) {
+      alert("Password must contain at least one special character");
+      return false;
+    }
 
     return true;
   }
   document.getElementById('password').addEventListener('blur', validatePassword);
 
-function Repassword(){
-  var password = document.getElementById('password').value;
+  function Repassword() {
+    var password = document.getElementById('password').value;
     var Repassword = document.getElementById('Repassword').value;
-  if (password !== Repassword) {
-    alert("Passwords do not match");
+    if (password !== Repassword) {
+      alert("Passwords do not match");
     } else {
       console.log("Passwords match");
     }
-}
-document.getElementById('Repassword').addEventListener('blur', Repassword);
+  }
+  document.getElementById('Repassword').addEventListener('blur', Repassword);
 
 
-/*checkbox validation*/
-function validateCheckboxes() { //dosn't work!!!!!!
-    var checkbox1 = document.getElementById("checkbox1");
+  /*checkbox validation*/
+  function validateCheckboxes() { //dosn't work!!!!!!
+    // var checkbox1 = document.getElementById("checkbox1");
+    var checkbox1 = document.getElementById("test_id");
     var checkbox2 = document.getElementById("checkbox2");
     var checkbox3 = document.getElementById("checkbox3");
     var checkbox4 = document.getElementById("checkbox4");
     var checkbox5 = document.getElementById("checkbox5");
-    if (checkbox1.checked || checkbox2.checked || checkbox3.checked || checkbox4.checked || checkbox5.checked) {
-      return true;
-    } else {
+    if (!checkbox1.checked && !checkbox2.checked && !checkbox3.checked && !checkbox4.checked && !checkbox5.checked) {
       alert("You must select at least one option");
       return false;
     }
+    return true;
   }
-  
 
-  
+
+
 
 
 

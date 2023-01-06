@@ -199,7 +199,7 @@
 
         <label for="psw"><b>Password</b></label>
         <input type="password" id="password" placeholder="Enter Password" name="psw" required>
-
+        <!-- href="#0" -->
         <button type="submit" onclick="attempt_login()">Login</button>
         <label>
           <input type="checkbox" checked="checked" name="remember"> Remember me
@@ -226,14 +226,22 @@
 <script>
 
 
-  function attempt_login(params) {
+  function attempt_login() {
+
     response = login()
     console.log("returned from server");
+    // if server returned OK
+    console.log(response.status)
+    console.log(response.result)
     response.done(function (data) {
-      console.log("response code : " + response)
-      console.log("login successfull...");
-      location.href = '//majdrezik.website';
+      console.log(data)
+      console.log("response code : " + data.statusCode)
+      console.log("løgin successƒull... √");
+      console.log('redirecting to: ' + data.redirect_path)
+      window.location.href = data.redirect_path; //relative to domain
     });
+
+    // if server returned FAIL
     response.fail(function (jqXHR, exception) {
       var msg = '';
       if (jqXHR.status === 0) {
@@ -255,20 +263,69 @@
     })
   }
 
+
+
+
   function login() {
     var username = document.getElementById("username").value
     var password = document.getElementById("password").value
+
+    // create JSON
     var credentials = {
       username: username,
       password: password
     }
+
+    /*
+    {
+      "username": "USERNAME_FROM_INPUT",
+      "password": "PASS_FROM_INPUT"
+    }
+    */
     const req = JSON.stringify(credentials)
+    console.log("typeof req: " + typeof req)
+    console.log("typeof req2: " + typeof JSON.stringify(req))
+    console.log("typeof req3: " + typeof JSON.parse(req))
+    console.log(JSON.parse(req))
+    setTimeout(() => { console.log(JSON.parse(req)); }, 5000);
+    // go to server
+    // var result
     return $.ajax({
-      url: "/login",
+      url: "/auth0",
       type: "POST",
       contentType: "application/json",
-      data: JSON.stringify(req)
-    });
+      dataType: "json",
+      data: JSON.stringify(JSON.parse(req))
+    })
+      // .error(function (jqXHR, textStatus, errorThrown) {
+      //   console.log(errorThrown);
+      // })
+      .done(function (data) {
+        console.log(data)
+        console.log("response code : " + data.statusCode)
+        console.log("løgin successƒull... √");
+        console.log('redirecting to: ' + data.redirect_path)
+        window.location.href = data.redirect_path; //relative to domain
+      })
+      .fail(function (jqXHR, exception) {
+        var msg = '';
+        if (jqXHR.status === 0) {
+          msg = 'No connection.\n Verify Network.';
+        } else if (jqXHR.status == 404) {
+          msg = 'Requested page not found. [404]';
+        } else if (jqXHR.status == 500) {
+          msg = 'Internal Server Error [500].';
+        } else if (exception === 'parsererror') {
+          msg = 'Requested JSON parse failed.';
+        } else if (exception === 'timeout') {
+          msg = 'Time out error.';
+        } else if (exception === 'abort') {
+          msg = 'Ajax request aborted.';
+        } else {
+          msg = 'Uncaught Error.\n' + jqXHR.responseText;
+        }
+        showError(msg);
+      })
   }
 
   function showError(msg) {
@@ -283,6 +340,8 @@
     elm.innerHTML = ''
     elm.style.display = "none"
   }
+
+
 </script>
 
 

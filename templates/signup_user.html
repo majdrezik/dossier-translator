@@ -8,7 +8,7 @@
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
     crossorigin="anonymous"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-  
+
 </head>
 <style>
   body {
@@ -141,7 +141,7 @@
   }
 </style>
 
-<body onload="document.getElementById('id01').style.display='block';" >
+<body onload="document.getElementById('id01').style.display='block';">
 
 
   <!-- <div class="alert alert-success d-flex align-items-center" id="alert_success" role="alert"
@@ -165,7 +165,10 @@
   <div id="id01" class="modal">
     <!-- <span onclick="document.getElementById('id01').style.display='none'" class="close"
       title="Close Modal">&times;</span> -->
-    <form class="modal-content" action="/user_homepage">
+
+
+    <!-- <form class="modal-content" action="/user_homepage"> -->
+    <form class="modal-content">
       <div class="alert alert-success" role="alert" id="alert_success"
         style="display:none ; z-index: 2; width: 100%; padding-left: auto;padding-right: auto;">
         Signed up successfully
@@ -176,15 +179,15 @@
         <hr>
         <label for="full_name"><b>Full Name</b></label>
 
-        <input type="text" placeholder="Enter Name" name="name" pattern="[A-Za-z ]+" oninvalid="alert('Please enter a valid name');" required>
+        <input id="username" type="text" placeholder="Enter Name" name="name" pattern="[A-Za-z ]+" required>
 
 
         <label for="email"><b>Email</b></label>
         <input id="email" type="text" placeholder="Enter Email" name="email" required>
 
 
-        <label for="age1"><b>Age</b></label>
-        <input id="age1" type="text" placeholder="Enter your age" name="age1" pattern="[0-9]*" required>
+        <label for="age"><b>Age</b></label>
+        <input id="age" type="text" placeholder="Enter your age" name="age" pattern="[0-9]*" required>
 
         <label for="password"><b>Password</b></label>
         <input id="password" type="password" placeholder="Enter Password" name="password" required>
@@ -201,7 +204,7 @@
 
         <div class="clearfix">
           <button type="button" onclick="cancel()" class="cancelbtn">Cancel</button>
-          <button type="submit" class="signupbtn" onclick="someFunc()">Sign Up</button>
+          <button type="submit" class="signupbtn" onclick="validate_and_attempt_signup()">Sign Up</button>
         </div>
       </div>
     </form>
@@ -209,22 +212,99 @@
 
   <script>
 
+
     function signup() {
-      //show_alert()
-      show_success_alert()
-      delay(3000);
-      window.location.href = "/user_homepage"
+
+      response = attempt_signup()
+      console.log("returned from server");
+      console.log("response: " + response.JSON);
+      if (response == null) {
+        console.log('Unauthorized - email or password are incorrect')
+      }
+
+      // else, there will be an OBJECT of the POSITIONAL_USER (trying to login) (!= regular user) .
+
+      // if server returned OK
+      response.done(function (data) {
+        console.log("response code : " + response)
+        console.log("login successfull...");
+        // location.href = '//majdrezik.website';
+        console.log("returned from server");
+        console.log("response: " + response);
+        // window.location.href = "/user_homepage"      // test
+        var current_user;
+        current_user = check_user_or_tester();
+      });
+
+      // if server returned FAIL
+      response.fail(function (jqXHR, exception) {
+        var msg = '';
+        if (jqXHR.status === 0) {
+          msg = 'No connection.\n Verify Network.';
+        } else if (jqXHR.status == 404) {
+          msg = 'Requested page not found. [404]';
+        } else if (jqXHR.status == 500) {
+          msg = 'Internal Server Error [500].';
+        } else if (exception === 'parsererror') {
+          msg = 'Requested JSON parse failed.';
+        } else if (exception === 'timeout') {
+          msg = 'Time out error.';
+        } else if (exception === 'abort') {
+          msg = 'Ajax request aborted.';
+        } else {
+          msg = 'Uncaught Error.\n' + jqXHR.responseText;
+        }
+        showError(msg);
+      })
+
     }
 
+
+
+
+    function attempt_signup() {
+      var username = document.getElementById("username").value
+      var password = document.getElementById("password").value
+      var email = document.getElementById("email").value
+      var age = document.getElementById("age").value
+      var password = document.getElementById("password").value
+
+      // create JSON
+      var credentials = {
+        username: username,
+        password: password,
+        email: email,
+        age: age,
+        password: password
+      }
+
+      /*
+      {
+        "username": "USERNAME_FROM_INPUT",
+        "password": "PASS_FROM_INPUT"
+      }
+      */
+      const req = JSON.stringify(credentials)
+      // go to server
+      return $.ajax({
+        url: "/attempt_signup_user",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(req)
+      });
+    }
+
+
+
     function cancel(params) {
-    show_alert()
-    window.location.href = "/"
-  }
+      show_alert()
+      window.location.href = "/"
+    }
 
 
-  function show_alert(param) {
+    function show_alert(param) {
 
-  }
+    }
     function delay(time) {
       return new Promise(resolve => setTimeout(resolve, time));
     }
@@ -248,93 +328,88 @@
     /***************validation*****************/
 
     /*empty fields validation*/
-    function notEmptyCheck(name)
-      {
-      if (name.value.length == 0)
-            { 
-              //alert("Name can not be empty.");
-              return false; 
-            }  	
-            return true; 
-      } 
-
-function someFunc() {
-  notEmptyCheck(name);
-  signup();
-  Age();
-  validateEmail();
-  validatePassword();
-
-  Repassword();
-}
-
-/*age validation*/
-function Age(){  
-
-  var x=document.getElementById('age1').value;
-  x= parseInt(x,10);
-  if (!(x>1 && x<100))
-  { 
-    alert("The age must be a number between 1 and 100");
-    return false;
-  }
-  return true;
-}
-
-document.getElementById('age1').addEventListener('blur', Age);
-
-
-
-
-/*email validation*/
-function validateEmail() {
-    // Get the email value
-    var email = document.getElementById('email').value;
-    // Check that the email is in a valid format
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
-      alert('Invalid email address');
-      return false;
+    function notEmptyCheck() {
+      var name = document.getElementById("username").value
+      if (name.value.length == 0) {
+        //alert("Name can not be empty.");
+        return false;
+      }
+      return true;
     }
-    return true;
-  }
-  document.getElementById('email').addEventListener('blur', validateEmail);
 
-
-  /*password validation*/
-  function validatePassword() {
-    var password = document.getElementById('password').value;
-
-    
-
-    if (password.length < 8) {
-      alert('Password must be at least 8 characters long');
-      return false;
+    function validate_and_attempt_signup() {
+      notEmptyCheck();
+      validate_age_between_1_and_100();
+      validateEmail();
+      validatePassword();
+      Repassword();
+      signup();
     }
-    if (!password.match(/\d/)) {
-    alert("Password must contain at least one number");
-    return false;
-  }
-  if (!password.match(/[^A-Za-z0-9]/)) {
-    alert("Password must contain at least one special character");
-    return false;
-  }
 
-  
-    return true;
-  }
-  document.getElementById('password').addEventListener('blur', validatePassword);
+    /*age validation*/
+    function validate_age_between_1_and_100() {
 
-
-function Repassword(){
-  var password = document.getElementById('password').value;
-    var Repassword = document.getElementById('Repassword').value;
-  if (password !== Repassword) {
-    alert("Passwords do not match");
-    } else {
-      console.log("Passwords match");
+      var x = document.getElementById('age').value;
+      x = parseInt(x, 10);
+      if (!(x > 1 && x < 100)) {
+        alert("The age must be a number between 1 and 100");
+        return false;
+      }
+      return true;
     }
-}
-document.getElementById('Repassword').addEventListener('blur', Repassword);
+
+    document.getElementById('age').addEventListener('blur', validate_age_between_1_and_100);
+
+
+
+
+    /*email validation*/
+    function validateEmail() {
+      // Get the email value
+      var email = document.getElementById('email').value;
+      // Check that the email is in a valid format
+      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+        alert('Invalid email address');
+        return false;
+      }
+      return true;
+    }
+    document.getElementById('email').addEventListener('blur', validateEmail);
+
+
+    /*password validation*/
+    function validatePassword() {
+      var password = document.getElementById('password').value;
+
+
+
+      if (password.length < 4) {
+        alert('Password must be at least 4 characters long');
+        return false;
+      }
+      if (!password.match(/\d/)) {
+        alert("Password must contain at least one number");
+        return false;
+      }
+      // if (!password.match(/[^A-Za-z0-9]/)) {
+      //   alert("Password must contain at least one special character");
+      //   return false;
+      // }
+      return true;
+    }
+    document.getElementById('password').addEventListener('blur', validatePassword);
+
+
+    function Repassword() {
+      var password = document.getElementById('password').value;
+      var Repassword = document.getElementById('Repassword').value;
+      if (password !== Repassword) {
+        alert("Passwords do not match");
+      } else {
+        console.log("Passwords match");
+      }
+    }
+    document.getElementById('Repassword').addEventListener('blur', Repassword);
 
 
   </script>
