@@ -99,7 +99,6 @@ def auth():
         # print(type(req))
         print('------------------------')
         # this converts the json query to a python dictionary
-        print('1')
         # reqToProcess = json.loads(req)
         reqToProcess = req
 
@@ -198,44 +197,74 @@ def signup_user():
     return render_template('signup_user.html')
 
 
-@ app.route("/attempt_signup_user", methods=['POST'])
-def attempt_signup_user():
-    is_users_table_created = create_users_table_if_doesnt_exist()
-    req = request.get_json()
-    print("GOT here to attempt_signup_user.server on route /attempt_signup_user")
-    print('query : ', req)
-    print(type(req))
-    reqToProcess = json.loads(req)
-    print(reqToProcess)
-    username = reqToProcess['username']
-    print('username: ', reqToProcess['username'])
-    password = reqToProcess['password']
+@ app.route("/attempt_signup_user", methods=['GET', 'POST'])
+def attempt_signup_user_controller():
     print("##################")
+    print("called attempt_signup_user_controller")
+    if request.method == 'POST':
+        print("post")
+        req = request.get_json()
+        print("GOT here to attempt_signup_user.server on route /attempt_signup_user")
+        print('query : ', req)
+        print(type(req))
+        # reqToProcess = json.loads(req)
+        print(req)
+        # loading fields...
+        print("loading fields...")
+        username = req['username']
+        email = req['email']
+        age = req['age']
+        password = req['password']
+        print('username: ', username)
+        print('email: ', email)
+        print('age: ', age)
+        print('password: ', password)
+
+        # if no user in db has this username, register this user.
+        if (check_user_already_exist(username) == False):
+            register_user(username, email, age, password)
+            return jsonify(
+                username=username,
+                email=email,
+                age=age,
+                password=password,
+                redirect_path="/"
+            )
+        else:
+            # error 403 - Already Exists
+            return 'User Already Exists', 403
     print("Finished attempt_signup_user.SERVER")
-    # register_user()
-    resp = jsonify({"name": "majd-test"})
-    return resp
 
 
-def register_user():
-    req = request.get_json()
-    # This is the query that was stored in the JSON within the browser
-    print('query : ', req)
-    print(type(req))
-    print('------------------------')
-    # this converts the json query to a python dictionary
-    reqToProcess = json.loads(req)
-    print(reqToProcess)
-    username = reqToProcess['username']
-    print('username: ', reqToProcess['username'])
-    password = reqToProcess['password']
-    print('password: ', reqToProcess['password'])
-    resp = jsonify(success=True)
-    if (are_credentials_valid(username, password)):
-        return True
+def check_user_already_exist(username):
+    cursor = conn.cursor(dictionary=True)  # to return a dictionary
+    user_query = "SELECT * FROM doss_sc.users where username=%s"
+    result_user = cursor.execute(user_query, (username,))
+    user = cursor.fetchone()
+    if (user == None):
+        print("no user with username: " + username)
+        return False  # No user in db with this username = {username}
+    return True  # There is already a user with username = {username}
+
+# files/users/majd@gmail.com
 
 
-@ app.route("/signupTester")
+def register_user(username, email, age, password):
+    cursor = conn.cursor(dictionary=True)  # to return a dictionary
+    sql = "INSERT INTO doss_sc.users (username, email, age, password, files_path) VALUES (%s, %s, %s, %s, %s)"
+    val = (username, email, age, password,
+           create_directory_for_files("users", username, email))
+    cursor.execute(sql, val)
+    conn.commit()
+    print(cursor.rowcount, "record inserted.")
+    return True
+
+
+def create_directory_for_files(user_type, username, email):
+    return 'files/'+user_type+'/'+username+'@'+email
+
+
+@app.route("/signupTester")
 def signup_tester():
     is_testers_table_created = create_testers_table_if_doesnt_exist()
 

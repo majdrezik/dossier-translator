@@ -177,9 +177,9 @@
         <h1>Sign Up as User</h1>
         <p>Please fill in this form to create an account.</p>
         <hr>
-        <label for="full_name"><b>Full Name</b></label>
+        <label for="full_name"><b>Username</b></label>
 
-        <input id="username" type="text" placeholder="Enter Name" name="name" pattern="[A-Za-z ]+" required>
+        <input id="username" type="text" placeholder="Enter Username" name="name" pattern="[a-z0-9_]" required>
 
 
         <label for="email"><b>Email</b></label>
@@ -204,7 +204,8 @@
 
         <div class="clearfix">
           <button type="button" onclick="cancel()" class="cancelbtn">Cancel</button>
-          <button type="submit" class="signupbtn" onclick="validate_and_attempt_signup()">Sign Up</button>
+          <button type="submit" class="signupbtn" onclick="signup()">Sign Up</button>
+          <!-- onclick="validate_and_attempt_signup()" -->
         </div>
       </div>
     </form>
@@ -214,26 +215,19 @@
 
 
     function signup() {
-
+      validate_and_attempt_signup()
       response = attempt_signup()
       console.log("returned from server");
-      console.log("response: " + response.JSON);
-      if (response == null) {
-        console.log('Unauthorized - email or password are incorrect')
-      }
 
       // else, there will be an OBJECT of the POSITIONAL_USER (trying to login) (!= regular user) .
 
       // if server returned OK
       response.done(function (data) {
-        console.log("response code : " + response)
-        console.log("login successfull...");
-        // location.href = '//majdrezik.website';
-        console.log("returned from server");
-        console.log("response: " + response);
-        // window.location.href = "/user_homepage"      // test
-        var current_user;
-        current_user = check_user_or_tester();
+        console.log(data)
+        console.log("response code : " + data.statusCode)
+        console.log("løgin successƒull... √");
+        console.log('redirecting to: ' + data.redirect_path)
+        window.location.href = data.redirect_path; //relative to domain
       });
 
       // if server returned FAIL
@@ -254,7 +248,6 @@
         } else {
           msg = 'Uncaught Error.\n' + jqXHR.responseText;
         }
-        showError(msg);
       })
 
     }
@@ -264,7 +257,6 @@
 
     function attempt_signup() {
       var username = document.getElementById("username").value
-      var password = document.getElementById("password").value
       var email = document.getElementById("email").value
       var age = document.getElementById("age").value
       var password = document.getElementById("password").value
@@ -272,7 +264,6 @@
       // create JSON
       var credentials = {
         username: username,
-        password: password,
         email: email,
         age: age,
         password: password
@@ -290,8 +281,9 @@
         url: "/attempt_signup_user",
         type: "POST",
         contentType: "application/json",
-        data: JSON.stringify(req)
-      });
+        dataType: "json",
+        data: JSON.stringify(JSON.parse(req))
+      })
     }
 
 
@@ -329,13 +321,14 @@
 
     /*empty fields validation*/
     function notEmptyCheck() {
-      var name = document.getElementById("username").value
-      if (name.value.length == 0) {
-        //alert("Name can not be empty.");
+      var username = document.getElementById("username").value
+      if (!/^[a-z0-9_]+$/.test(username)) {
+        alert('username must contain Uppercase, lowercase, digits and underscores only');
         return false;
       }
       return true;
     }
+    document.getElementById('username').addEventListener('blur', notEmptyCheck);
 
     function validate_and_attempt_signup() {
       notEmptyCheck();
@@ -343,7 +336,6 @@
       validateEmail();
       validatePassword();
       Repassword();
-      signup();
     }
 
     /*age validation*/
