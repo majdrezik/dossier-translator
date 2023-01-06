@@ -188,19 +188,18 @@
   <!-- <button onclick="document.getElementById('id01').style.display='block'" style="width:100%;">Login</button> -->
 
   <div id="id01" class="modal">
-
     <form class="modal-content animate" method="post">
       <h1 style="text-align:center;">Dossier Translator</h1>
 
       <div class="container">
         <h2 style="text-align:left; font-size:x-large; font-family: Verdana, Geneva, Tahoma, sans-serif;">Login</h2>
         <label for="uname"><b>Username</b></label>
-        <input type="text" id="username" placeholder="Enter Username" name="uname" required>
+        <input type="text" id="username" placeholder="Enter Username" name="username" required>
 
         <label for="psw"><b>Password</b></label>
-        <input type="password" id="password" placeholder="Enter Password" name="psw" required>
+        <input type="password" id="password" placeholder="Enter Password" name="password" required>
         <!-- href="#0" -->
-        <button type="submit" onclick="attempt_login()">Login</button>
+        <button type="reset" onclick="attempt_login()">Login</button>
         <label>
           <input type="checkbox" checked="checked" name="remember"> Remember me
         </label>
@@ -231,12 +230,8 @@
     response = login()
     console.log("returned from server");
     // if server returned OK
-    console.log(response.status)
-    console.log(response.result)
     response.done(function (data) {
-      console.log(data)
-      console.log("response code : " + data.statusCode)
-      console.log("løgin successƒull... √");
+      console.log("POST request is done")
       console.log('redirecting to: ' + data.redirect_path)
       window.location.href = data.redirect_path; //relative to domain
     });
@@ -263,70 +258,62 @@
     })
   }
 
-
-
-
   function login() {
     var username = document.getElementById("username").value
     var password = document.getElementById("password").value
 
-    // create JSON
+    // var credentials = '{"username":"' + username + '", "password":"' + password + '"}'
+    // var credentials = { "username": username, "password": password }
     var credentials = {
       username: username,
       password: password
     }
 
-    /*
-    {
-      "username": "USERNAME_FROM_INPUT",
-      "password": "PASS_FROM_INPUT"
-    }
+    /**
+      console.log(JSON.parse(JSON.stringify(credentials)))  is JSON object
+      console.log(JSON.stringify(credentials)) is JSON string
     */
-    const req = JSON.stringify(credentials)
-    console.log("typeof req: " + typeof req)
-    console.log("typeof req2: " + typeof JSON.stringify(req))
-    console.log("typeof req3: " + typeof JSON.parse(req))
-    console.log(JSON.parse(req))
-    setTimeout(() => { console.log(JSON.parse(req)); }, 5000);
-    // go to server
-    // var result
+
+
+
+    console.log(credentials)
+    var data = JSON.parse(JSON.stringify(credentials))
     return $.ajax({
       url: "/auth0",
       type: "POST",
-      contentType: "application/json",
-      dataType: "json",
-      data: JSON.stringify(JSON.parse(req))
+      async: false,
+      // contentType: "application/json; charset=utf-8",
+      // dataType: "json",
+      // dataType: 'json',
+      data: {
+        username: username,
+        password: password
+      }
     })
-      // .error(function (jqXHR, textStatus, errorThrown) {
-      //   console.log(errorThrown);
-      // })
-      .done(function (data) {
-        console.log(data)
-        console.log("response code : " + data.statusCode)
-        console.log("løgin successƒull... √");
-        console.log('redirecting to: ' + data.redirect_path)
-        window.location.href = data.redirect_path; //relative to domain
-      })
-      .fail(function (jqXHR, exception) {
-        var msg = '';
-        if (jqXHR.status === 0) {
-          msg = 'No connection.\n Verify Network.';
-        } else if (jqXHR.status == 404) {
-          msg = 'Requested page not found. [404]';
-        } else if (jqXHR.status == 500) {
-          msg = 'Internal Server Error [500].';
-        } else if (exception === 'parsererror') {
-          msg = 'Requested JSON parse failed.';
-        } else if (exception === 'timeout') {
-          msg = 'Time out error.';
-        } else if (exception === 'abort') {
-          msg = 'Ajax request aborted.';
-        } else {
-          msg = 'Uncaught Error.\n' + jqXHR.responseText;
-        }
-        showError(msg);
-      })
   }
+
+  // success: function (data) {
+  //   console.log("Yay!");
+  //   console.log("løgin successƒull... √");
+  //   console.log(JSON.stringify(response, null, 2));
+  //   /* 
+  //            response = {
+  //                 "errors": "wrong credentials, please try again...",
+  //                 "redirect_path": "/",
+  //                 "result": "Check credentials"
+  //               }       
+  //    */
+  //   // console.log('redirecting to: ' + response)
+  //   // window.location.href = response.redirect_path; //relative to domain
+  // },
+  // error: function (jqXHR, textStatus, errorThrown) {
+  //   console.log(textStatus, errorThrown);
+  // }
+
+
+
+  /*
+    */
 
   function showError(msg) {
     var elm = document.getElementById('error');

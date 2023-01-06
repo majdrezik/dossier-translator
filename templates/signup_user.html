@@ -2,13 +2,17 @@
 <html>
 
 <head>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
 </head>
 <style>
   body {
@@ -154,9 +158,13 @@
     </div>
   </div> -->
 
+  <div class="alert alert-success" role="alert" id="success_alert" style="display:none">
+    Signed up successfully
+  </div>
 
-
-
+  <div class="alert alert-secondary" role="alert" id="wait_alert" style="display:none">
+    signing you up, plesae wait...
+  </div>
 
   <!-- <h2>Modal Signup Form</h2> -->
 
@@ -200,9 +208,47 @@
           <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
         </label>
 
-        <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
 
-        <div class="clearfix">
+        <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">
+          By creating an account you agree to our Terms & Privacy
+        </button>
+
+
+        <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
+          aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                1. All patient information will be kept strictly confidential.
+                2. Patient information will only be shared with authorized personnel on a need-to-know basis.
+                3. Patients have the right to request access to their personal health information at any time.
+                4. Patients may request that their personal health information be amended if they believe it is
+                inaccurate
+                or incomplete.
+                5. Any unauthorized access or disclosure of patient information will be promptly reported and
+                investigated.
+                6. Physical and electronic measures will be taken to protect patient information from unauthorized
+                access,
+                alteration, or destruction.
+                7. Patients will be notified in the event of a breach of their personal health information.
+                8. These terms and conditions may be revised at any time to comply with relevant laws and regulations.
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class=" clearfix">
           <button type="button" onclick="cancel()" class="cancelbtn">Cancel</button>
           <button type="submit" class="signupbtn" onclick="signup()">Sign Up</button>
           <!-- onclick="validate_and_attempt_signup()" -->
@@ -223,13 +269,28 @@
 
       // if server returned OK
       response.done(function (data) {
+        show_hide_wait_alert()
+        wait(3000);
+        show_hide_wait_alert();
+        show_hide_successful_signup_alert();
+        wait(2000);
         console.log(data)
         console.log("response code : " + data.statusCode)
-        console.log("løgin successƒull... √");
+        console.log("signup successƒull... √");
+        console.log("username :" + data.username)
         console.log('redirecting to: ' + data.redirect_path)
+        alert("Signup successƒull! redirecting you to Login page...");
         window.location.href = data.redirect_path; //relative to domain
       });
 
+
+      function wait(ms) {
+        var start = new Date().getTime();
+        var end = start;
+        while (end < start + ms) {
+          end = new Date().getTime();
+        }
+      }
       // if server returned FAIL
       response.fail(function (jqXHR, exception) {
         var msg = '';
@@ -353,7 +414,23 @@
     document.getElementById('age').addEventListener('blur', validate_age_between_1_and_100);
 
 
+    function show_hide_successful_signup_alert() {
+      var x = document.getElementById("success_alert");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
 
+    function show_hide_wait_alert() {
+      var x = document.getElementById("wait_alert");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
 
     /*email validation*/
     function validateEmail() {

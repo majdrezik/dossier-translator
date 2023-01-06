@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, make_response
 import os
 from os import environ
 import json
@@ -11,7 +11,7 @@ import PyPDF2
 from sqlite3 import Error
 import mysql.connector
 from jinja2 import Environment, FileSystemLoader
-
+from mysql.connector import Error
 
 # con = sqlite3.connect("dossier.db")
 # conn = None
@@ -60,27 +60,14 @@ def create_connection():
             user="root",
             # password="root",
             # database="doss_app",
-            port="3306"
+            port="3306",
+            autocommit=True
         )
         return conn
     except Error as e:
+        print("Error while connecting to MySQL", e)
         print(e)
     return conn
-
-
-def create_table(conn, create_table_sql):
-    """ create a table from the create_table_sql statement
-    :param conn: Connection object
-    :param create_table_sql: a CREATE TABLE statement
-    :return:
-    """
-    try:
-        cursor = conn.cursor()
-        cursor.execute(
-            create_table_sql
-        )
-    except Error as e:
-        print(e)
 
 
 @app.route("/",  methods=['GET', 'POST'])
@@ -92,99 +79,150 @@ def login():
 @app.route("/auth0", methods=['GET', 'POST'])
 def auth():
     if request.method == 'POST':
-        print("post")
-        req = request.get_json()
-        # This is the query that was stored in the JSON within the browser
-        print('query : ', req)
-        # print(type(req))
-        print('------------------------')
-        # this converts the json query to a python dictionary
-        # reqToProcess = json.loads(req)
-        reqToProcess = req
+        print("_POST_ is executed")
 
-        print(reqToProcess)
-        print(type(reqToProcess))
-        username = reqToProcess['username']
-        print("username:")
-        print(reqToProcess['username'])
-        password = reqToProcess['password']
-        print("password:")
-        print(reqToProcess['password'])
-        # resp = jsonify(success=True)
+        username = request.form['username']
+        password = request.form['password']
 
         table = "testers" if (
             (get_user_position(username)).__eq__('tester')
         ) else "users"
         print("table:" + table)
-        if (are_credentials_valid(table, username, password) == True):
+        if (are_credentials_valid(table, username, password)):
             if (table.__eq__("testers")):
+                current_user = json.loads(
+                    get_tester_by_name_as_json(username))
                 # return render_template('waiting_documents.html', tester=json.loads(get_tester_by_name_as_json(username)))
-                return ["user_homepage", json.loads(get_tester_by_name_as_json(username))]
-
-            else:  # user
-                current_user = json.loads(get_user_by_name_as_json(username))
                 print("current user: ")
                 print(current_user)
                 print(type(current_user))
+                # return jsonify(
+                #     # status=200,
+                #     result=current_user,
+                #     redirect_path="tester_homepage"
+                # )
+                return ("tester_homepage", 200)
+
+            else:  # user
+                current_user = json.loads(
+                    get_user_by_name_as_json(username))
+                print("current user: ")
+                print(current_user)
+                print(type(current_user))
+                # data = {
+                #     "redirect_path": "/user_homepage",
+                #     "status": 200,
+                #     "current_user": current_user
+                # }
+                # response_json = json.dumps(response, indent=4)
+
+                '''
+                ANOTHER WAY:
                 return jsonify(
-                    # status=200,
-                    result=current_user,
-                    redirect_path="user_homepage"
+                    message=f"{len(data)} users deleted.",
+                    category="success",
+                    data=data,
+                    status=200
                 )
+                '''
+                print("Sent back to client...")
+                print(current_user["email"])
+                print(current_user["age"])
+
+                return jsonify(
+                    username=username,
+                    email=current_user["email"],
+                    age=current_user["age"],
+                    password=password,
+                    redirect_path="/user_homepage"
+                )
+
+                # return make_response(
+                #     jsonify(
+                #         data
+                #     ), 200
+                # )
+            # return jsonify(redirect_path=redirect_path)
+        else:
+            print('#########!!!!!!!!!!!!!!!!!#########')
+            print('wrong credentials, please check...')
+            print('#########!!!!!!!!!!!!!!!!!#########')
+            return jsonify(result="Check credentials", redirect_path="/", errors="wrong credentials, please try again...")
     else:
-        return "GET"
+        print("oops, got here in GET return")
+        return render_template('login_page.html')  # GET
 
 
 def get_user_by_name_as_json(username):
-    cursor = conn.cursor(dictionary=True)  # to return a dictionary
-    user_query = "SELECT * FROM doss_sc.users where username=%s"
-    result_user = cursor.execute(user_query, (username,))
-    user = cursor.fetchone()
-    if (user == None):
-        print("no user with username: " + username)
-    print(f"user as JSON: {json.dumps(user)} ")
-    return json.dumps(user)  # converts return value to JSON
+    try:
+        cursor = conn.cursor(dictionary=True)  # to return a dictionary
+        user_query = "SELECT * FROM doss_sc.users where username=%s"
+        result_user = cursor.execute(user_query, (username,))
+        user = cursor.fetchone()
+        if (user == None):
+            print("no user with username: " + username)
+        print(f"user as JSON: {json.dumps(user)} ")
+        # conn.close()
+        cursor.close()
+        return json.dumps(user)
+    except Exception as e:
+        print("Error occurred: %s" % e)
+      # converts return value to JSON
 
 
 def get_tester_by_name_as_json(username):
-    cursor = conn.cursor()  # to return a dictionary
-    tester_query = "SELECT * FROM doss_sc.testers where username=%s"
-    result_user = cursor.execute(tester_query, (username,))
-    tester = cursor.fetchone()
-    if (tester == None):
-        print("no tester with username: " + username)
-    print(f"tester as JSON: {json.dumps(tester)} ")
-    return json.dumps(tester)  # converts return value to JSON
+    try:
+        cursor = conn.cursor()  # to return a dictionary
+        tester_query = "SELECT * FROM doss_sc.testers where username=%s"
+        result_user = cursor.execute(tester_query, (username,))
+        tester = cursor.fetchone()
+        if (tester == None):
+            print("no tester with username: " + username)
+        print(f"tester as JSON: {json.dumps(tester)} ")
+        cursor.close()
+        return json.dumps(tester)  # converts return value to JSON
+    except Exception as e:
+        print("Error occurred: %s" % e)
 
 
 def get_user_position(username):
-    print("called get_user_position for " + username)
-    position = 'user'
-    cursor = conn.cursor()
-    sql_user = "SELECT * FROM doss_sc.users where username=%s"
-    result_user = cursor.execute(sql_user, (username,))
-    row = cursor.fetchone()
-    if (row == None):
-        sql_tester = "SELECT * FROM doss_sc.testers where username=%s"
-        result_tester = cursor.execute(sql_tester, (username,))
+    try:
+        print("called get_user_position for " + username)
+        position = 'user'
+        cursor = conn.cursor()
+        sql_user = "SELECT * FROM doss_sc.users where username=%s"
+        result_user = cursor.execute(sql_user, (username,))
         row = cursor.fetchone()
-        if (row == None):
-            position = None
+        if (row != None):
+            print('position: user')
         else:
-            print('tester')
-            position = 'tester'
-    print('user')
-    return position
+            sql_tester = "SELECT * FROM doss_sc.testers where username=%s"
+            result_tester = cursor.execute(sql_tester, (username,))
+            row = cursor.fetchone()
+            if (row == None):
+                position = None
+            else:
+                print('position: tester')
+                position = 'tester'
+        cursor.close()
+        return position
+    except Exception as e:
+        print("Error occurred: %s" % e)
 
 
 def are_credentials_valid(table, username, password):
-    print("called are_credentials_valid")
-    cursor = conn.cursor()
-    sql = "SELECT * FROM doss_sc." + table + " where username=%s and password=%s"
-    print(sql)
-    result = cursor.execute(sql, (username, password,))
-    row = cursor.fetchone()
-    return False if row == None else True
+    try:
+        print("called are_credentials_valid")
+        print(conn)
+        cursor = conn.cursor()
+        sql = "SELECT * FROM doss_sc." + table + " where username=%s and password=%s"
+        print(sql)
+        result = cursor.execute(sql, (username, password,))
+        row = cursor.fetchone()
+        cursor.close()
+        return False if row == None else True
+    except Exception as e:
+        print("Error occurred: %s" % e)
 
 
 @ app.route("/signup")
@@ -237,31 +275,38 @@ def attempt_signup_user_controller():
 
 
 def check_user_already_exist(username):
-    cursor = conn.cursor(dictionary=True)  # to return a dictionary
-    user_query = "SELECT * FROM doss_sc.users where username=%s"
-    result_user = cursor.execute(user_query, (username,))
-    user = cursor.fetchone()
-    if (user == None):
-        print("no user with username: " + username)
-        return False  # No user in db with this username = {username}
-    return True  # There is already a user with username = {username}
-
+    try:
+        cursor = conn.cursor(dictionary=True)  # to return a dictionary
+        user_query = "SELECT * FROM doss_sc.users where username=%s"
+        result_user = cursor.execute(user_query, (username,))
+        user = cursor.fetchone()
+        if (user == None):
+            print("no user with username: " + username)
+            cursor.close()
+            return False  # No user in db with this username = {username}
+        cursor.close()
+        return True  # There is already a user with username = {username}
+    except Exception as e:
+        print("Error occurred: %s" % e)
 # files/users/majd@gmail.com
 
 
 def register_user(username, email, age, password):
-    cursor = conn.cursor(dictionary=True)  # to return a dictionary
-    sql = "INSERT INTO doss_sc.users (username, email, age, password, files_path) VALUES (%s, %s, %s, %s, %s)"
-    val = (username, email, age, password,
-           create_directory_for_files("users", username, email))
-    cursor.execute(sql, val)
-    conn.commit()
-    print(cursor.rowcount, "record inserted.")
-    return True
+    try:
+        cursor = conn.cursor(dictionary=True)  # to return a dictionary
+        sql = "INSERT INTO doss_sc.users (username, email, age, password, files_path) VALUES (%s, %s, %s, %s, %s)"
+        val = (username, email, age, password,
+               create_directory_for_files("users", username, email))
+        cursor.execute(sql, val)
+        conn.commit()
+        cursor.close()
+        return True
+    except Exception as e:
+        print("Error occurred: %s" % e)
 
 
 def create_directory_for_files(user_type, username, email):
-    return 'files/'+user_type+'/'+username+'@'+email
+    return 'files/'+user_type+'/'+username
 
 
 @app.route("/signupTester")
@@ -445,9 +490,12 @@ def main():
     conn = create_connection()
     print('connection established')
     app.run(debug=True, host='0.0.0.0', port=port)
+    # conn.close()
 
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
 
+
 main()
+# conn.close()
