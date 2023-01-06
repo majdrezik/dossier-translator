@@ -96,12 +96,14 @@ def auth():
                 print("current user: ")
                 print(current_user)
                 print(type(current_user))
-                # return jsonify(
-                #     # status=200,
-                #     result=current_user,
-                #     redirect_path="tester_homepage"
-                # )
-                return ("tester_homepage", 200)
+
+                return jsonify(
+                    username=username,
+                    email=current_user["email"],
+                    age=current_user["age"],
+                    password=password,
+                    redirect_path="/tester_homepage"
+                )
 
             else:  # user
                 current_user = json.loads(
@@ -109,22 +111,7 @@ def auth():
                 print("current user: ")
                 print(current_user)
                 print(type(current_user))
-                # data = {
-                #     "redirect_path": "/user_homepage",
-                #     "status": 200,
-                #     "current_user": current_user
-                # }
-                # response_json = json.dumps(response, indent=4)
 
-                '''
-                ANOTHER WAY:
-                return jsonify(
-                    message=f"{len(data)} users deleted.",
-                    category="success",
-                    data=data,
-                    status=200
-                )
-                '''
                 print("Sent back to client...")
                 print(current_user["email"])
                 print(current_user["age"])
@@ -160,7 +147,7 @@ def get_user_by_name_as_json(username):
         result_user = cursor.execute(user_query, (username,))
         user = cursor.fetchone()
         if (user == None):
-            print("no user with username: " + username)
+            print("no user with username: " + username + " exists in db")
         print(f"user as JSON: {json.dumps(user)} ")
         # conn.close()
         cursor.close()
@@ -172,7 +159,7 @@ def get_user_by_name_as_json(username):
 
 def get_tester_by_name_as_json(username):
     try:
-        cursor = conn.cursor()  # to return a dictionary
+        cursor = conn.cursor(dictionary=True)  # to return a dictionary
         tester_query = "SELECT * FROM doss_sc.testers where username=%s"
         result_user = cursor.execute(tester_query, (username,))
         tester = cursor.fetchone()
@@ -230,7 +217,7 @@ def signup():
     return render_template('signup.html')
 
 
-@ app.route("/signupUser")
+@ app.route("/signupUser", methods=['GET', 'POST'])
 def signup_user():
     return render_template('signup_user.html')
 
@@ -259,7 +246,7 @@ def attempt_signup_user_controller():
         print('password: ', password)
 
         # if no user in db has this username, register this user.
-        if (check_user_already_exist(username) == False):
+        if (check_user_already_exist(username, 'users') == False):
             register_user(username, email, age, password)
             return jsonify(
                 username=username,
@@ -274,14 +261,15 @@ def attempt_signup_user_controller():
     print("Finished attempt_signup_user.SERVER")
 
 
-def check_user_already_exist(username):
+def check_user_already_exist(username, table):
     try:
         cursor = conn.cursor(dictionary=True)  # to return a dictionary
-        user_query = "SELECT * FROM doss_sc.users where username=%s"
+        user_query = "SELECT * FROM doss_sc." + table + " where username=%s"
+        print(user_query)
         result_user = cursor.execute(user_query, (username,))
         user = cursor.fetchone()
         if (user == None):
-            print("no user with username: " + username)
+            print("no user with username: " + username + " exists in db")
             cursor.close()
             return False  # No user in db with this username = {username}
         cursor.close()
@@ -309,31 +297,63 @@ def create_directory_for_files(user_type, username, email):
     return 'files/'+user_type+'/'+username
 
 
-@app.route("/signupTester")
+@app.route("/signupTester", methods=['GET', 'POST'])
 def signup_tester():
-    is_testers_table_created = create_testers_table_if_doesnt_exist()
+    return render_template('signup_tester.html')
 
 
-# def create_testers_table_if_doesnt_exist():
-#     sql_create_testers_table = """ CREATE TABLE IF NOT EXISTS testers (
-#                                             id integer PRIMARY KEY NOT NULL AUTO_INCREMENT,
-#                                             name text NOT NULL,
-#                                             email text,
-#                                             age integer,
-#                                             password text,
-#                                             type text,
-#                                             languages text,
-#                                             files_path text
-#                                         ); """
-#     cursor = conn.cursor()
-#     if does_testers_table_exist is False:
-#         if conn is not None:
-#             # create projects table
-#             create_table(conn, sql_create_testers_table)
-#             does_testers_table_exist = True
-#         else:
-#             print("Error! cannot create the database connection.")
-#     return does_testers_table_exist
+@ app.route("/attempt_signup_tester", methods=['GET', 'POST'])
+def attempt_signup_tester_controller():
+    print("##################")
+    print("called attempt_signup_tester_controller")
+    if request.method == 'POST':
+        print("post")
+        req = request.get_json()
+        print("GOT here to attempt_signup_tester_controller.server on route /attempt_signup_tester")
+        print('query : ', req)
+        print(type(req))
+        # reqToProcess = json.loads(req)
+        print(req)
+        # loading fields...
+
+        print("loading fields...")
+        username = req['username']
+        email = req['email']
+        age = req['age']
+        password = req['password']
+        languages = req['languages']
+
+        print('username: ', username)
+        print('email: ', email)
+        print('age: ', age)
+        print('password: ', password)
+        print('languages: ', languages)
+
+        # if no user in db has this username, register this user.
+        if (check_user_already_exist(username, "testers") == False):
+            register_tester(username, email, age, password, languages)
+            return jsonify(
+                redirect_path="/"
+            )
+        else:
+            # error 403 - Already Exists
+            return 'User Already Exists', 403
+    print("Finished attempt_signup_user.SERVER")
+
+
+def register_tester(username, email, age, password, languages):
+    try:
+        cursor = conn.cursor(dictionary=True)  # to return a dictionary
+        sql = "INSERT INTO doss_sc.testers (username, email, age, password, files_path , languages) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (username, email, age, password,
+               create_directory_for_files("users", username, email), languages)
+        cursor.execute(sql, val)
+        conn.commit()
+        cursor.close()
+        return True
+
+    except Exception as e:
+        print("Error occurred: %s" % e)
 
 
 def create_users_table_if_doesnt_exist():
@@ -356,11 +376,6 @@ def create_users_table_if_doesnt_exist():
         else:
             print("Error! cannot create the database connection.")
     return does_users_table_exist
-
-
-@ app.route("/attempt_signup_tester")
-def attempt_signup_tester():
-    return render_template('signup_tester.html')
 
 
 @ app.route("/user_homepage",  methods=['GET', 'POST'])

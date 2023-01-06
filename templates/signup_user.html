@@ -185,28 +185,28 @@
         <h1>Sign Up as User</h1>
         <p>Please fill in this form to create an account.</p>
         <hr>
-        <label for="full_name"><b>Username</b></label>
+        <label for="username"><b>Username</b></label>
 
-        <input id="username" type="text" placeholder="Enter Username" name="name" pattern="[a-z0-9_]" required>
+        <input id="username" type="text" placeholder="John_doe1" name="username" pattern="[a-zA-Z0-9_]*$" required>
 
 
         <label for="email"><b>Email</b></label>
-        <input id="email" type="text" placeholder="Enter Email" name="email" required>
+        <input id="email" type="text" placeholder="johm_doe@example.com" name="email"
+          pattern="[[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$]" required>
 
 
-        <label for="age"><b>Age</b></label>
-        <input id="age" type="text" placeholder="Enter your age" name="age" pattern="[0-9]*" required>
+        <label for="age"><b>age</b></label>
+        <input id="age" type="text" placeholder="Enter your age" name="age" pattern="[0-9]{,2}" required>
+
 
         <label for="password"><b>Password</b></label>
-        <input id="password" type="password" placeholder="Enter Password" name="password" required>
+        <input id="password" type="password" placeholder="Enter Password (minimum 4 chars)" name="password"
+          pattern="[a-zA-Z0-9_]{4,}" required>
 
         <label for="Repassword"><b>Repeat Password</b></label>
-        <input id="Repassword" type="password" placeholder="Repeat Password" name="Repassword" required>
+        <input id="Repassword" type="password" placeholder="Repeat Password" name="Repassword"
+          pattern="[a-zA-Z0-9_]{4,}" required>
 
-
-        <label>
-          <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-        </label>
 
 
         <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">
