@@ -249,7 +249,7 @@
       <!-- End side dropdown -->
       <div class="clearfix">
         <button type="button" onclick="cancel()" class="cancelbtn">Cancel</button>
-        <button type="submit" class="signupbtn" onclick="signup()">Sign Up</button>
+        <button type="button" class="signupbtn" onclick="signup()">Sign Up</button>
       </div>
     </form>
   </div>
@@ -300,6 +300,7 @@
     validate_and_attempt_signup()
     response = attempt_signup()
     console.log("returned from server");
+
     response.done(function (data) {
       console.log(data)
       console.log('redirecting to: ' + data.redirect_path)
@@ -345,11 +346,13 @@
     var email = document.getElementById("email").value
     var age = document.getElementById("age").value
     var password = document.getElementById("password").value
+
     var arabic = document.getElementById("Arabic");
     var english = document.getElementById("English");
     var hebrew = document.getElementById("Hebrew");
     var russian = document.getElementById("Russian");
     var ukranian = document.getElementById("Ukranian");
+
     // if ((!Arabic.checked) && (!English.checked) && (!Hebrew.checked) && (!Russian.checked) && (!Ukranian.checked))
     const languages = [arabic, english, hebrew, russian, ukranian]
     var selected_languages = []

@@ -249,10 +249,6 @@ def attempt_signup_user_controller():
         if (check_user_already_exist(username, 'users') == False):
             register_user(username, email, age, password)
             return jsonify(
-                username=username,
-                email=email,
-                age=age,
-                password=password,
                 redirect_path="/"
             )
         else:

@@ -208,12 +208,12 @@
           pattern="[a-zA-Z0-9_]{4,}" required>
 
 
-
+        <!-- 
         <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">
           By creating an account you agree to our Terms & Privacy
-        </button>
+        </button> -->
 
-
+        <!-- 
         <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
           aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
           <div class="modal-dialog modal-dialog-scrollable" role="document">
@@ -245,12 +245,12 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
 
 
         <div class=" clearfix">
           <button type="button" onclick="cancel()" class="cancelbtn">Cancel</button>
-          <button type="submit" class="signupbtn" onclick="signup()">Sign Up</button>
+          <button type="button" class="signupbtn" onclick="signup()">Sign Up</button>
           <!-- onclick="validate_and_attempt_signup()" -->
         </div>
       </div>
@@ -269,15 +269,7 @@
 
       // if server returned OK
       response.done(function (data) {
-        show_hide_wait_alert()
-        wait(3000);
-        show_hide_wait_alert();
-        show_hide_successful_signup_alert();
-        wait(2000);
         console.log(data)
-        console.log("response code : " + data.statusCode)
-        console.log("signup successƒull... √");
-        console.log("username :" + data.username)
         console.log('redirecting to: ' + data.redirect_path)
         alert("Signup successƒull! redirecting you to Login page...");
         window.location.href = data.redirect_path; //relative to domain
@@ -342,7 +334,7 @@
         url: "/attempt_signup_user",
         type: "POST",
         contentType: "application/json",
-        dataType: "json",
+        // dataType: "json",
         data: JSON.stringify(JSON.parse(req))
       })
     }
