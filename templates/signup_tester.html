@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+    crossorigin="anonymous"></script>
+</head>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Full-width input fields */
+  input[type=text],
+  input[type=password] {
+    width: 100%;
+    padding: 15px;
+    margin: 10px 0 10px 0;
+    display: inline-block;
+    border: none;
+    background: #f1f1f1;
+  }
+
+  /* Add a background color when the inputs get focus */
+  input[type=text]:focus,
+  input[type=password]:focus {
+    background-color: #ddd;
+    outline: none;
+  }
+
+  /* Set a style for all buttons */
+  button {
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+  }
+
+  button:hover {
+    opacity: 1;
+  }
+
+  /* Extra styles for the cancel button */
+  .cancelbtn {
+    padding: 14px 20px;
+    background-color: #f44336;
+  }
+
+  /* Float cancel and signup buttons and add an equal width */
+  .cancelbtn,
+  .signupbtn {
+    float: left;
+    width: 50%;
+  }
+
+  /* Add padding to container elements */
+  .container {
+    padding: 100px;
+  }
+
+  /* The Modal (background) */
+  .modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 0;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgba(241, 227, 227, 0.867);
+
+  }
+
+  /* Modal Content/Box */
+  .modal-content {
+    background-color: #fefefe;
+    margin: 0% auto 0% auto;
+    /* 5% from the top, 15% from the bottom and centered */
+    border: 1px solid #888;
+    width: 80%;
+    /* Could be more or less, depending on screen size */
+  }
+
+  /* Style the horizontal ruler */
+  hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 25px;
+  }
+
+  /* The Close Button (x) */
+  .close {
+    position: absolute;
+    right: 35px;
+    top: 15px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #f1f1f1;
+  }
+
+  .close:hover,
+  .close:focus {
+    color: #f44336;
+    cursor: pointer;
+  }
+
+  /* Clear floats */
+  .clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+
+  /* Change styles for cancel button and signup button on extra small screens */
+  @media screen and (max-width: 300px) {
+
+    .cancelbtn,
+    .signupbtn {
+      width: 100%;
+    }
+  }
+
+  .float-container {
+    /* border: 3px solid #fff;
+    padding: 20px; */
+  }
+
+  .float-child1 {
+    width: 80%;
+    float: left;
+    padding: 20px;
+  }
+
+  .float-child2 {
+    width: 20%;
+    float: left;
+    padding-top: 10%;
+  }
+
+  /* .wrapper {
+    width: 200px;
+    padding: 20px;
+    height: 150px;
+  } */
+</style>
+
+<body onload="document.getElementById('id01').style.display='block';">
+  <!-- <h2>Modal Signup Form</h2> -->
+
+  <!-- <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;"> -->
+
+  <div id="id01" class="modal">
+    <!-- <span onclick="document.getElementById('id01').style.display='none'" class="close"
+      title="Close Modal">&times;</span> -->
+    <form class="modal-content" action="/tester_homepvalidate_age_between_1_and_100" style="width: 100%">
+      <div class="alert alert-success" role="alert" id="alert_success"
+        style="display:none ; z-index: 2; width: 100%; padding-left: auto;padding-right: auto;">
+        Signed up successfully
+      </div>
+      <div class="float-container">
+        <div class="float-child1">
+          <div class="" style="width: 90%;">
+            <h1>Sign Up as Tester</h1>
+            <p>Please fill in this form to create an account.</p>
+            <hr>
+            <label for="username"><b>Username</b></label>
+
+            <input id="username" type="text" placeholder="John_doe1" name="username" pattern="/[a-zA-Z0-9_]*$/"
+              required>
+
+
+            <label for="email"><b>Email</b></label>
+            <input id="email" type="text" placeholder="johm_doe@example.com" name="email"
+              pattern="/[[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$]/" required>
+
+
+            <label for="age"><b>age</b></label>
+            <input id="age" type="text" placeholder="Enter your age" name="age" pattern="/[0-9]{,2}/" required>
+
+
+            <label for="password"><b>Password</b></label>
+            <input id="password" type="password" placeholder="Enter Password (minimum 4 chars)" name="password"
+              pattern="/[a-zA-Z0-9_]{4,}/" required>
+
+            <label for="Repassword"><b>Repeat Password</b></label>
+            <input id="Repassword" type="password" placeholder="Repeat Password" name="Repassword"
+              pattern="/[a-zA-Z0-9_]{4,}/" required>
+
+            <label>
+              <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
+            </label>
+
+            <button type="button" class="btn btn-link" data-bs-toggle="modal" data-bs-target="#exampleModalScrollable">
+              By creating an account you agree to our Terms & Privacy
+            </button>
+          </div>
+        </div>
+
+        <div class="float-child2">
+          <!-- side dropdown -->
+          <h3>Choose Language/s to support</h3>
+          <div class="form-check form-switch" id="test_id">
+            <input class="form-check-input" type="checkbox" id="Arabic">
+            <label class="form-check-label" for="Arabic">Arabic</label>
+          </div>
+
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="English">
+            <label class="form-check-label" for="English">English</label>
+          </div>
+
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="Hebrew">
+            <label class="form-check-label" for="Hebrew">Hebrew</label>
+          </div>
+
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="Russian">
+            <label class="form-check-label" for="Russian">Russian</label>
+          </div>
+
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="Ukranian">
+            <label class="form-check-label" for="Ukranian">Ukranian</label>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- End side dropdown -->
+      <div class="clearfix">
+        <button type="button" onclick="cancel()" class="cancelbtn">Cancel</button>
+        <button type="button" class="signupbtn" onclick="signup()">Sign Up</button>
+      </div>
+    </form>
+  </div>
+  <!--   
+  <div class="alert alert-success d-flex align-items-center" role="alert">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+    <div>
+      An example success alert with an icon
+    </div>
+  </div> -->
+  <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalScrollableTitle">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          1. All patient information will be kept strictly confidential.
+          2. Patient information will only be shared with authorized personnel on a need-to-know basis.
+          3. Patients have the right to request access to their personal health information at any time.
+          4. Patients may request that their personal health information be amended if they believe it is
+          inaccurate
+          or incomplete.
+          5. Any unauthorized access or disclosure of patient information will be promptly reported and
+          investigated.
+          6. Physical and electronic measures will be taken to protect patient information from unauthorized
+          access,
+          alteration, or destruction.
+          7. Patients will be notified in the event of a breach of their personal health information.
+          8. These terms and conditions may be revised at any time to comply with relevant laws and regulations.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<script>
+
+  function signup() {
+    validate_and_attempt_signup()
+    response = attempt_signup()
+    console.log("returned from server");
+
+    response.done(function (data) {
+      console.log(data)
+      console.log('redirecting to: ' + data.redirect_path)
+      alert("Signup successƒull! redirecting you to Login page...");
+      window.location.href = data.redirect_path; //relative to domain
+    });
+
+
+    function wait(ms) {
+      var start = new Date().getTime();
+      var end = start;
+      while (end < start + ms) {
+        end = new Date().getTime();
+      }
+    }
+    // if server returned FAIL
+    response.fail(function (jqXHR, exception) {
+      var msg = '';
+      if (jqXHR.status === 0) {
+        msg = 'No connection.\n Verify Network.';
+      } else if (jqXHR.status == 404) {
+        msg = 'Requested page not found. [404]';
+      } else if (jqXHR.status == 500) {
+        msg = 'Internal Server Error [500].';
+      } else if (exception === 'parsererror') {
+        msg = 'Requested JSON parse failed.';
+      } else if (exception === 'timeout') {
+        msg = 'Time out error.';
+      } else if (exception === 'abort') {
+        msg = 'Ajax request aborted.';
+      } else {
+        msg = 'Uncaught Error.\n' + jqXHR.responseText;
+      }
+    })
+
+  }
+
+
+
+
+  function attempt_signup() {
+    var username = document.getElementById("username").value
+    var email = document.getElementById("email").value
+    var age = document.getElementById("age").value
+    var password = document.getElementById("password").value
+
+    var arabic = document.getElementById("Arabic");
+    var english = document.getElementById("English");
+    var hebrew = document.getElementById("Hebrew");
+    var russian = document.getElementById("Russian");
+    var ukranian = document.getElementById("Ukranian");
+
+    // if ((!Arabic.checked) && (!English.checked) && (!Hebrew.checked) && (!Russian.checked) && (!Ukranian.checked))
+    const languages = [arabic, english, hebrew, russian, ukranian]
+    var selected_languages = []
+
+    // loop through all languages and check which are chosen and store them in array [selected_languages]
+    for (let i = 0; i < languages.length; i++) {
+      if (languages[i].checked) {
+        selected_languages.push(languages[i].id) // to store the ID which is basically the name of the language
+      } // expected value example: ["Arabic","English"]
+    }
+    var selected_languages_as_string = selected_languages.join()  // join() converts <ARRAY> ["Arabic","English"] ==> <STRING> "Arabic,English"
+    console.log("selected_languages_as_string : " + selected_languages_as_string)
+    console.log(selected_languages)
+
+
+    var credentials = {
+      username: username,
+      email: email,
+      age: age,
+      password: password,
+      languages: selected_languages_as_string
+    }
+
+
+    const req = JSON.stringify(credentials)
+
+    console.log("typeof credentials: " + typeof credentials)
+    console.log(credentials)
+    console.log("typeof JSON.stringify(credentials): " + typeof JSON.stringify(credentials))
+    console.log(JSON.stringify(credentials))
+    console.log("typeof JSON.stringify(JSON.parse(req)): " + typeof JSON.stringify(JSON.parse(req)))
+    console.log(JSON.stringify(JSON.parse(req)))
+
+    // go to server
+    return $.ajax({
+      url: "/attempt_signup_tester",
+      type: "POST",
+      contentType: "application/json",
+      // dataType: "json",
+      data: JSON.stringify(JSON.parse(req))
+    })
+  }
+
+
+
+
+
+
+
+  function cancel(params) {
+    show_alert()
+    window.location.href = "/"
+  }
+
+
+  function show_alert(param) {
+
+  }
+  function delay(time) {
+    return new Promise(resolve => setTimeout(resolve, time));
+  }
+
+
+
+
+
+
+  function show_success_alert() {
+    var aler_success = document.getElementById("alert_success")
+    if (aler_success.style.display === "none") {
+      aler_success.style.display = "block";
+      // delay(1000)
+      //   .then(
+      //     () => aler_success.style.display === "none"
+      //   )
+      setTimeout(function () {
+        $('#alert_success').fadeOut('fast');
+      }, 1500);
+    }
+    aler_success.style.display === "none"
+  }
+
+
+  /***************validation*****************/
+
+
+
+  function validate_and_attempt_signup() {
+    // notEmptyCheck();
+    // validate_age_between_1_and_100();
+    // validateEmail();
+    // validatePassword();
+
+    Repassword();
+    validateCheckboxes();
+  }
+
+  /*validate_age_between_1_and_100 validation*/
+  function validate_age_between_1_and_100() {
+
+    var x = document.getElementById('age').value;
+    x = parseInt(x, 10);
+    if (!(x > 1 && x < 100)) {
+      alert("Age must be a number between 1 and 100");
+      return false;
+    }
+    return true;
+  }
+
+
+
+  function notEmptyCheck() {
+    var username = document.getElementById("username").value
+    if (!/^[a-zA-Z0-9_]*$/.test(username)) {
+      alert('username must contain Uppercase, lowercase, digits and underscores only');
+      return false;
+    }
+    return true;
+  }
+  // document.getElementById('age').addEventListener('blur', validate_age_between_1_and_100);
+  // document.getElementById('username').addEventListener('blur', notEmptyCheck);
+  // document.getElementById('email').addEventListener('blur', validateEmail);
+  // document.getElementById('password').addEventListener('blur', validatePassword);
+  // document.getElementById('Repassword').addEventListener('blur', Repassword);
+
+
+  /*email validation*/
+  function validateEmail() {
+    // Get the email value
+    var email = document.getElementById('email').value;
+    // Check that the email is in a valid format
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      alert('Invalid email address');
+      return false;
+    }
+    return true;
+  }
+
+
+  /*password validation*/
+  function validatePassword() {
+    var password = document.getElementById('password').value;
+
+    var Repassword = document.getElementById('Repassword').value;
+
+
+    if (password.length < 4) {
+      alert('Password must be at least 4 characters long');
+      return false;
+    }
+    if (!password.match(/\d/)) {
+      alert("Password must contain at least one number");
+      return false;
+    }
+
+    return true;
+  }
+
+  function Repassword() {
+    var password = document.getElementById('password').value;
+    var Repassword = document.getElementById('Repassword').value;
+    if (password !== Repassword) {
+      alert("Passwords do not match");
+    } else {
+      console.log("Passwords match");
+    }
+  }
+
+
+  /*checkbox validation*/
+  function validateCheckboxes() { //dosn't work!!!!!!
+    // var Arabic = document.getElementById("Arabic");
+    var Arabic = document.getElementById("Arabic");
+    var English = document.getElementById("English");
+    var Hebrew = document.getElementById("Hebrew");
+    var Russian = document.getElementById("Russian");
+    var Ukranian = document.getElementById("Ukranian");
+    if ((!Arabic.checked) && (!English.checked) && (!Hebrew.checked) && (!Russian.checked) && (!Ukranian.checked)) {
+      alert("You must select at least one language");
+      return false;
+    }
+    return true;
+  }
+
+
+
+
+
+
+
+
+
+</script>
+
+
+</html>
