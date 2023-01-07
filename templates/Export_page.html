@@ -55,8 +55,8 @@
 			<div style="text-align:center;" class="dropdown">
                 <form class='Name'>
                   <b><label style="font-size:18px;" for="type">Select Type:</label></b>
-                  <select style="background:rgb(214, 212, 212); color:black; width:30%; padding:1%; border-radius: 4px;" name="type" id="type">
-                    <option style="background:white;" value="type"></option>
+                  <select style="background:rgb(214, 212, 212); color:black; width:30%; padding:1%; border-radius: 4px;" name="type" id="type" required>
+                    <option value="" disabled selected>Select file type</option>
                     <option style="background:white;" value="PDF">PDF</option>
                     <option style="background:white;" value="JPEG">JPEG</option>
                     <option style="background:white;" value="PNG">PNG</option>
@@ -96,6 +96,11 @@
     }
 
     function Print() {
+      var type = document.getElementById("type");
+	  if (type.value == "") {
+		alert("Please select the type of the translation file.");
+    return false;
+	  }
         window.print();
     }
 
