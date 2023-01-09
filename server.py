@@ -152,7 +152,7 @@ def auth():
 
 def get_user_by_name_as_json(username):
     try:
-        global conn
+        # global conn
         cursor = conn.cursor(dictionary=True)  # to return a dictionary
         user_query = "SELECT * FROM doss_sc.users where username=%s"
         result_user = cursor.execute(user_query, (username,))
@@ -170,7 +170,7 @@ def get_user_by_name_as_json(username):
 
 def get_tester_by_name_as_json(username):
     try:
-        global conn
+        # global conn
         cursor = conn.cursor(dictionary=True)  # to return a dictionary
         tester_query = "SELECT * FROM doss_sc.testers where username=%s"
         result_user = cursor.execute(tester_query, (username,))
@@ -186,7 +186,7 @@ def get_tester_by_name_as_json(username):
 
 def get_user_position(username):
     try:
-        global conn
+        # global conn
         print("called get_user_position for " + username)
         position = 'user'
         cursor = conn.cursor()
@@ -212,7 +212,7 @@ def get_user_position(username):
 
 def are_credentials_valid(table, username, password):
     try:
-        global conn
+        # global conn
         print("called are_credentials_valid")
         print(conn)
         cursor = conn.cursor()
@@ -273,7 +273,7 @@ def attempt_signup_user_controller():
 
 def check_user_already_exist(username, table):
     try:
-        global conn
+        # global conn
         cursor = conn.cursor(dictionary=True)  # to return a dictionary
         user_query = "SELECT * FROM doss_sc." + table + " where username=%s"
         print(user_query)
@@ -292,7 +292,7 @@ def check_user_already_exist(username, table):
 
 def register_user(username, email, age, password):
     try:
-        global conn
+        # global conn
         cursor = conn.cursor(dictionary=True)  # to return a dictionary
         sql = "INSERT INTO doss_sc.users (username, email, age, password, files_path) VALUES (%s, %s, %s, %s, %s)"
         val = (username, email, age, password,
@@ -355,7 +355,7 @@ def attempt_signup_tester_controller():
 
 def register_tester(username, email, age, password, languages):
     try:
-        global conn
+        # global conn
         cursor = conn.cursor(dictionary=True)  # to return a dictionary
         sql = "INSERT INTO doss_sc.testers (username, email, age, password, files_path , languages) VALUES (%s, %s, %s, %s, %s, %s)"
         val = (username, email, age, password,
@@ -432,17 +432,18 @@ def send_to_tester(input_file_path, translation_path,
 
 def assign_file_to_tester(language_from, language_to):
     try:
-        global conn
+        # global conn
         cursor = conn.cursor(dictionary=True)  # to return a dictionary
 
-        query = f'''SELECT username FROM (
-            SELECT username, num_files_waiting, languages AS languages2
-            FROM doss_sc.testers
-            )
-            AS testers
-            WHERE languages2 LIKE '%{language_from}%{language_to}%'
-            ORDER BY num_files_waiting ASC
-        '''
+        query = f"""SELECT username, num_files_waiting FROM ( /* selecting username */
+            SELECT username, num_files_waiting, languages AS languages2 /* selecting num_files_waiting */
+            FROM doss_sc.testers /* FROM doss_sc.testers */
+            ) /* end */
+            AS testers /*AS testers*/
+            WHERE languages2 LIKE '%{language_from}%{language_to}%' /*compare languages*/
+            ORDER BY num_files_waiting ASC /*ASC*/
+        """
+
         print("assigning file to tester...")
         print(query)
         result_user = cursor.execute(query)
@@ -455,36 +456,46 @@ def assign_file_to_tester(language_from, language_to):
         print(tester)
         print("tester username : ")
         print(tester.get('username'))
+        # cursor.close()
         tester_username = tester.get('username')
+        files_waitin = tester.get('num_files_waiting')
+        print("waiting documents before update: ")
+        print(files_waitin)
         update_tester_count_for_waiting_documents(tester_username)
-        cursor.close()
+        print("closing cursor in assign_file_to_tester")
+        conn.commit()
+        print("closed cursor in assign_file_to_tester")
     except Exception as e:
         print("Error occurred in assign_file_to_tester: %s" % e)
 
 
 def update_tester_count_for_waiting_documents(username):
     try:
-        global conn
+        print("update_tester_count_for_waiting_documents")
+        # global conn
         cursor = conn.cursor(dictionary=True)
         print(conn)
         print(cursor)
         print(username)
         print("called update_tester_count_for_waiting_documents")
 
-        addition = "num_files_waiting + 1"
+        addition = 1  # "num_files_waiting + 1"
         print(addition)
-        # addition_in_query = f'{addition:+}'
+        addition_in_query = f'{addition:+}'
         # query = "UPDATE doss_sc.testers SET num_files_waiting = num_files_waiting + 1 WHERE username ='" + username + "'"
 
+        query = f'''
+        UPDATE doss_sc.testers SET num_files_waiting = 5 WHERE username = '{username}'
+        '''
         # query = f'''
-        # UPDATE doss_sc.testers SET num_files_waiting = {addition} WHERE username = '{username}'
+        # UPDATE doss_sc.testers SET num_files_waiting = num_files_waiting {addition_in_query} WHERE username = '{username}'
         # '''
 
-        # print("query to update_tester_count_for_waiting_documents")
-        # print(query)
-        # print(f"successfully updated count for tester {username}")
-        # cursor.execute(query)
-        # conn.commit()
+        print("query to update_tester_count_for_waiting_documents")
+        print(query)
+        print(f"successfully updated count for tester {username}")
+        cursor.execute(query)
+        conn.commit()
     except Exception as e:
         print("Error occurred in update_tester_count_for_waiting_documents: %s" % e)
 
