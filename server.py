@@ -396,7 +396,7 @@ def exportpage():
 
 @ app.route("/testerchecktranslation")
 def checkingpage():
-    return render_template('tester_check_translation.html')
+    return render_template('tester_check.html')
 
 
 @ app.route('/test', methods=['GET'])

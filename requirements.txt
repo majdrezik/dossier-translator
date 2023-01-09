@@ -1,9 +1,14 @@
+# Flask==2.1.3
+# Flask-SQLAlchemy
+# pymongo
+# Flask-PyMongo
+# PyMuPDF
+# deep_translator
+# fpdf
+# reportlab
+# fs
 Flask==2.1.3
-Flask-SQLAlchemy
-pymongo
-Flask-PyMongo
-PyMuPDF
-deep_translator
-fpdf
-reportlab
-fs
+# fpdf
+PyPDF2
+mysql-connector-python
+Jinja2
