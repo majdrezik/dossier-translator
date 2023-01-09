@@ -6,4 +6,4 @@ PyMuPDF
 deep_translator
 fpdf
 reportlab
-fs
+PyPDF2
