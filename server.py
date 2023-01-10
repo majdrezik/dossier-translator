@@ -67,7 +67,8 @@ def create_connection():
             # password="root",
             # database="doss_app",
             port="3306",
-            autocommit=True
+            autocommit=True,
+            buffered=True
         )
         return conn
     except Error as e:
@@ -425,7 +426,8 @@ def test():
 @ app.route("/send_translation_to_tester", methods=['GET', 'POST'])
 def send_to_tester(input_file_path, translation_path,
                    language_from, language_to):
-    assign_file_to_tester(language_from, language_to)
+    if (assign_file_to_tester(language_from, language_to) == False):
+        return "No tester can assest with your testing now..."
     return render_template('tester_check_translation.html')
     # return render_template('tester_check_translation.html' , input_file_path=input_file_path ,translation_path=translation_path)
 
@@ -461,10 +463,11 @@ def assign_file_to_tester(language_from, language_to):
         files_waitin = tester.get('num_files_waiting')
         print("waiting documents before update: ")
         print(files_waitin)
-        update_tester_count_for_waiting_documents(tester_username)
         print("closing cursor in assign_file_to_tester")
-        conn.commit()
+        cursor.close()
         print("closed cursor in assign_file_to_tester")
+        update_tester_count_for_waiting_documents(tester_username)
+        return True
     except Exception as e:
         print("Error occurred in assign_file_to_tester: %s" % e)
 
@@ -485,7 +488,7 @@ def update_tester_count_for_waiting_documents(username):
         # query = "UPDATE doss_sc.testers SET num_files_waiting = num_files_waiting + 1 WHERE username ='" + username + "'"
 
         query = f'''
-        UPDATE doss_sc.testers SET num_files_waiting = 5 WHERE username = '{username}'
+        UPDATE doss_sc.testers SET num_files_waiting = num_files_waiting {addition_in_query} WHERE username = '{username}'
         '''
         # query = f'''
         # UPDATE doss_sc.testers SET num_files_waiting = num_files_waiting {addition_in_query} WHERE username = '{username}'
