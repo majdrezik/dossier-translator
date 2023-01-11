@@ -11,7 +11,7 @@ software engineering degree final project
 #
 
 2. **install the required packages:**
-Navigate to the project, open the terminal there and install the requirements. (You need pip for that, [see more](https://pip.pypa.io/en/stable/cli/pip_install/) 
+Navigate to the project, open the terminal there and install the requirements. (You need pip for that, [see more](https://pip.pypa.io/en/stable/cli/pip_install/) )
 #
 
     cd dossier-translator
