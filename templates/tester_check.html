@@ -13,10 +13,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
 
 
+
 </head>
 <style>
     body {
-    padding-top: 9%;
+    padding: 5%;
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgba(241, 227, 227, 0.867);
   }
@@ -55,7 +56,6 @@
                 User</button>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">Setting</a></li>
-                <!-- <li><a class="dropdown-item" href="#" onclick="Archive()">Archive</a></li> -->
                 <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
               </ul>
             </form>
@@ -64,62 +64,64 @@
 			<br>
 			<table style="width:100%;">
 			  <tr style="background:rgb(214, 212, 212);">
-				<th></th>
 				<th>Orginal</th>
 				<th>Translated</th>
+				<th style="width:5%;">Checked</th>
 			  </tr>
 			  <tr>
-			  <td><input type="checkbox"></td>
-			  <td>Sentence</td>
-			  <td>Sentence</td>
+			 <td>Sentence</td>
+				<td contenteditable title="Click to edit it!">Sentence</td>	
+			  <td><input type="checkbox" id="ch1"></td>
+			  </tr>
+		
 			  <tr>
-			  <td><input type="checkbox"></td>
-			  <td>Sentence</td>
-				<td>Sentence</td>
+			<td>Sentence</td>
+				<td contenteditable title="Click to edit it!">Sentence</td>	
+				<td><input type="checkbox" id="ch2"></td>
 			  </tr>
 			  <tr>
-			  <td><input type="checkbox"></td>
-			  <td>Sentence</td>
-				<td>Sentence</td>
+			 <td>Sentence</td>
+				<td contenteditable title="Click to edit it!">Sentence</td>	
+				<td><input type="checkbox" id="ch3"></td>
 			  </tr>
 			    <tr>
-				<td><input type="checkbox"></td>
-				<td>Sentence</td>
-				<td>Sentence</td>
-				
+			 <td>Sentence</td>
+				<td contenteditable title="Click to edit it!">Sentence</td>	
+				<td><input type="checkbox" id="ch4"></td>
 			  </tr>
-			    <tr>
-				<td><input type="checkbox"></td>
-				<td>Sentence</td>
-				<td>Sentence</td>
-			  </tr>
-			  <tr>
-			  <td><input type="checkbox"></td>
-				<td>Sentence</td>
-				<td>Sentence</td>
+			<tr>
+				 <td>Sentence</td>
+				<td contenteditable title="Click to edit it!">Sentence</td>	
+				<td><input type="checkbox" id="ch5"></td>
+
 			  </tr>
 			  <tr>
-			  <td><input type="checkbox"></td>
-				<td>Sentence</td>
-				<td>Sentence</td>
+			 <td>Sentence</td>
+				<td contenteditable title="Click to edit it!">Sentence</td>	
+				<td><input type="checkbox" id="ch6"></td>
 			  </tr>
 			  <tr>
-			  <td><input type="checkbox"></td>
-				<td>Sentence</td>
-				<td>Sentence</td>
+			 <td>Sentence</td>
+				<td contenteditable title="Click to edit it!">Sentence</td>	
+				<td><input type="checkbox" id="ch7"></td>
 			  </tr>
 			  <tr>
-			  <td><input type="checkbox"></td>
+			 <td>Sentence</td>
+				<td contenteditable title="Click to edit it!">Sentence</td>	
+				<td><input type="checkbox" id="ch8"></td>
+			  </tr>
+			  <tr>
 				<td>Sentence</td>
-				<td>Sentence</td>
+				<td contenteditable title="Click to edit it!">Sentence</td>	
+				<td><input type="checkbox" id="ch9"></td>				
 			  </tr>
 			</table>
 			<br>
 			<br>
-			<button style="border :1px solid black; color:black; margin: auto; display: block; width:30%;" class="btn btn-primary" type="button" onclick="OK()">Done</button>
-
-			
-			
+			<div style="text-align:center;">
+			<button style="border :1px solid black; color:white; margin: auto; display: block; width:20%; display:inline-block;" class="btn btn-primary" type="button" onclick="Required_checkboxes()">Submit and send to user</button>
+			<button style="border :1px solid black; color:white; margin: auto; display: block; width:20%; display:inline-block;" class="btn btn-primary" type="button" onclick="Cancel()">Cancel</button>
+			</div>
 			</div>
 	  
  
@@ -130,21 +132,45 @@
     function logout() {
       window.location.href = "/"
     }
-	function OK(){
+	
+	function Required_checkboxes(){
+		var ch1= document.getElementById("ch1");  
+		var ch2= document.getElementById("ch2");
+		var ch3= document.getElementById("ch3");
+		var ch4= document.getElementById("ch4");
+		var ch5= document.getElementById("ch5");
+		var ch6= document.getElementById("ch6");
+		var ch7= document.getElementById("ch7");
+		var ch8= document.getElementById("ch8");
+		var ch9= document.getElementById("ch9");
+
+		if((ch1.checked) && (ch2.checked) && (ch3.checked) && (ch4.checked) && (ch5.checked) && (ch6.checked) && (ch7.checked)
+		 && (ch8.checked) && (ch9.checked)){
+			Confirm_the_translation();
+		} 
+		else {
+			alert("You must select all the checkboxes!");
+		}
+	}
+	
+	
+	
+	function Confirm_the_translation(){
+	
 	  var result = window.confirm("Are you sure?");
 	  if(result){
 		    window.location.href = "/tester_homepage"
 
 	 }
 	 else{
-		hideConfirmWindow();
+		<!--result.style.display = "none";-->
 	 }
-	
-	  function hideConfirmWindow() {
-		result.style.display = "none";
-	  }
-	 }
+	}
+function Cancel(){
+	window.location.href = "/tester_homepage"
+}
 
+	
     </script>
 	
   </body>
