@@ -25,6 +25,7 @@ software engineering degree final project
 
     FLASK_APP=server.py flask run
     
+By default, the app runs on `PORT 5000`
 To run the app on a specific PORT, add `-p` option. for instance:
 
     FLASK_APP=server.py flask run -p 8080
