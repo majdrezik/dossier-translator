@@ -25,8 +25,8 @@ software engineering degree final project
 
     FLASK_APP=server.py flask run
     
-To run the app on a specific PORT, add `-p` option. for isntance:
+To run the app on a specific PORT, add `-p` option. for instance:
 
     FLASK_APP=server.py flask run -p 8080
 
-Navigate to `http://127.0.0.1:5000/login` in your browser, ENJOY!
+Navigate to `http://localhost:{YOUR_PORT}/` in your browser, ENJOY!
