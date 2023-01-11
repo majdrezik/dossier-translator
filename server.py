@@ -466,13 +466,14 @@ def assign_file_to_tester(language_from, language_to):
         print("closing cursor in assign_file_to_tester")
         cursor.close()
         print("closed cursor in assign_file_to_tester")
-        update_tester_count_for_waiting_documents(tester_username)
+        update_tester_count_for_waiting_documents(
+            tester_username, files_waitin)
         return True
     except Exception as e:
         print("Error occurred in assign_file_to_tester: %s" % e)
 
 
-def update_tester_count_for_waiting_documents(username):
+def update_tester_count_for_waiting_documents(username, files_waitin):
     try:
         print("update_tester_count_for_waiting_documents")
         # global conn
@@ -483,7 +484,6 @@ def update_tester_count_for_waiting_documents(username):
         print("called update_tester_count_for_waiting_documents")
 
         addition = 1  # "num_files_waiting + 1"
-        print(addition)
         addition_in_query = f'{addition:+}'
         # query = "UPDATE doss_sc.testers SET num_files_waiting = num_files_waiting + 1 WHERE username ='" + username + "'"
 
@@ -496,9 +496,11 @@ def update_tester_count_for_waiting_documents(username):
 
         print("query to update_tester_count_for_waiting_documents")
         print(query)
-        print(f"successfully updated count for tester {username}")
         cursor.execute(query)
         conn.commit()
+        print(f"successfully updated count for tester {username}")
+        print("waiting documents after update: " + str(files_waitin + 1))
+        cursor.close()
     except Exception as e:
         print("Error occurred in update_tester_count_for_waiting_documents: %s" % e)
 
