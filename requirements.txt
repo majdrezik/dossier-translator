@@ -6,3 +6,4 @@ reportlab
 mysql-connector-python
 PyPDF2
 Jinja2
+
