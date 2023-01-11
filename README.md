@@ -1,6 +1,6 @@
 # dossier-translator
 
-software engineering degree final project
+dossier-translator is a web-based app that translates files from user input and sends the translation to registered testers that supports the languages intended in an easy-to-compare UI, they confirm the translation is right, alternatively, they edit the "bad" translation and send the documents back to users where they can download the files in the prefered file type (pdf, word etc..) and it'll be archived 
 
 1. **clone the project: (here I'm using SSH, but you can do as you like)**
 
