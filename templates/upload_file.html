@@ -11,36 +11,24 @@
 </head>
 <style>
     body {
-    padding-top: 9%;
+    padding: 9%;
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgba(241, 227, 227, 0.867);
   }
 
-    .container {
-    padding: 16px; 
-    background-color: white;
-    border :1px solid black;
+  .container {
+    padding: 4%;
+    border: 1px solid black;
+    position: relative; 
+	  background-color: white;
       }
-  .Name {
-	text-align:center;
-	display: inline-block;
-	width:47%;}
-.Name .cf-medium {
-	width:97%;}
+	  
+	  .topright {
+	  position: absolute;  
+    top: 0;  
+	  right: 0;	
+	}
 
-.img {
-  vertical-align: baseline;
-}
-
-.img1{
-  vertical-align: text-bottom;
-}
-
-.topright {
-  position: absolute;
-  top: 18%;
-  right: 18.9%;
-}
 
 </style>
 
@@ -50,9 +38,8 @@
         <p>Please upload the file/document that you want to translate and
             select the language that you want to translate from and to.</p>
             <form class='topright'>
-              <button style="background:rgb(214, 212, 212); color:black; width:200%;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                User
-              </button>
+              <button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                User</button>
               <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">Setting</a></li>
                 <li><a class="dropdown-item" href="#" onclick="Archive()">Archive</a></li>
@@ -89,6 +76,7 @@
                     <option style="background:white;" value="Russian">Russian</option>
                     <option style="background:white;" value="Ukrainian">Ukrainian</option>
                     <option style="background:white;" value="Hebrew">Hebrew</option>
+                    <option style="background:white;" value="Arabic">Arabic</option>
                   </select>
                   
                   <img title="Choose a language you want to translate to" class="img" src="https://icons.veryicon.com/png/o/miscellaneous/epc/warning-52.png" width="13" height="13">
@@ -100,6 +88,7 @@
                   <option style="background:white;" value="Russian" selected>Russian</option>
                   <option style="background:white;" value="Ukrainian">Ukrainian</option>
                   <option style="background:white;" value="Hebrew">Hebrew</option>
+                  <option style="background:white;" value="Arabic">Arabic</option>
                 </select>
                   <br>
                   <br>
