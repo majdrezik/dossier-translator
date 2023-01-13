@@ -17,6 +17,9 @@ from PyPDF2 import PdfReader
 import re
 import random
 import string
+import smtplib
+from fileinput import filename
+from werkzeug.utils import secure_filename
 
 # con = sqlite3.connect("dossier.db")
 conn = None
@@ -27,6 +30,15 @@ template_dir = os.path.abspath('templates/')
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__, template_folder=template_dir)
+UPLOAD_FOLDER = 'static/uploads'
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+app.secret_key = "doss_secret"
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 
 # FLASK_APP=server.py flask run
@@ -416,6 +428,64 @@ def exportpage():
 def checkingpage():
     return render_template('tester_check.html')
 
+################################################################################################
+################################################################################################
+
+
+@app.route('/uploader', methods=['GET', 'POST'])
+def get_file_from_user_and_send_to_tester():
+    if request.method == 'POST':
+        if 'files[]' not in request.files:
+            resp = jsonify({'message': 'No file in the request'})
+            resp.status_code = 400
+            return resp
+        files = request.files.getlist('files[]')
+
+        language_from = request.form['language_from']
+        language_to = request.form['language_to']
+        print("language_from: " + language_from)
+        print("language_to: " + language_to)
+        errors = {}
+        success = False
+
+    for file in files:
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            success = True
+        else:
+            errors[file.filename] = 'File type is not allowed'
+
+        if success and errors:
+            errors['message'] = 'File(s) successfully uploaded'
+            resp = jsonify(errors)
+            resp.status_code = 206
+            return resp
+        if success:
+            resp = jsonify({'message': 'Files successfully uploaded'})
+            resp.status_code = 201
+            print('file uploaded successfully')
+            file_path = app.config['UPLOAD_FOLDER'] + '/' + filename
+            translate_file(file_path, language_from,
+                           language_to)
+            return resp
+        else:
+            resp = jsonify(errors)
+            resp.status_code = 400
+            return resp
+
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+################################################################################################
+################################################################################################
+
+
+@app.route('/')
+def upload_form():
+    return render_template('index.html')
+
 
 @ app.route('/test', methods=['GET'])
 def test():
@@ -436,13 +506,17 @@ def assign_file_to_tester(language_from, language_to):
     try:
         # global conn
         cursor = conn.cursor(dictionary=True)  # to return a dictionary
+        soreted_languages = [language_from, language_to]
+        soreted_languages.sort()
+        for language in soreted_languages:
+            print(language)
 
         query = f"""SELECT username, num_files_waiting FROM ( /* selecting username */
             SELECT username, num_files_waiting, languages AS languages2 /* selecting num_files_waiting */
             FROM doss_sc.testers /* FROM doss_sc.testers */
             ) /* end */
             AS testers /*AS testers*/
-            WHERE languages2 LIKE '%{language_from}%{language_to}%' /*compare languages*/
+            WHERE languages2 LIKE '%{soreted_languages[0]}%{soreted_languages[1]}%' /*compare languages*/
             ORDER BY num_files_waiting ASC /*ASC*/
         """
 
@@ -571,11 +645,12 @@ def write_array_of_translations_to_txt_file(translation, path):
 
 
 @ app.route("/translate_file", methods=['GET', 'POST'])
-# def translate_file(file, language_from, language_to):
-def translate_file():
+def translate_file(file, language_from, language_to):
+
+    # def translate_file():
     # input_file_path, reader = read_input_pdf_convert_to_text(file)
     global current_logged_user
-    input_file_path, reader = read_input_pdf_convert_to_text("./test/test.pdf")
+    input_file_path, reader = read_input_pdf_convert_to_text(file)
 
     print("file path: " + input_file_path)
     print("############################")
@@ -583,8 +658,9 @@ def translate_file():
     print("############################")
 
     # return array of pages translated
-    translation = send_to_translation(reader, 'english', 'hebrew')
-    # translation = send_to_translation(reader, language_from, language_to)     # THE RIGHT ONE
+    # translation = send_to_translation(reader, 'english', 'hebrew')
+    translation = send_to_translation(
+        reader, language_from.lower(), language_to.lower())     # THE RIGHT ONE
 
     print("############################")
     print("translation done...")
@@ -599,27 +675,50 @@ def translate_file():
     # send_to_tester(input_file_path, translation_path,
     #                language_from, language_to)
     send_to_tester(input_file_path, translation_path,
-                   'english', 'hebrew')
+                   language_from, language_to)
     return 'ok'
 
-# @ app.route("/translate_file")
-# def translate_file():
-#     # read_file(input_file)
-#     input_file = read_file()
-#     print(input_file)
-#     write_array_of_translations_to_txt_file(input_file, 'test/original.txt')
-#     print("############################")
-#     print("translating...")
-#     print("############################")
-#     translation = send_to_translation(input_file, 'english', 'italian')
-#     print("############################")
-#     print("translation done...")
-#     print("############################")
-#     print(translation)
-#     write_array_of_translations_to_txt_file(translation, 'test/translated.txt')
-#     # write_translation_to_pdf(output)
-#     send_to_tester()
-#     return 'ok'
+
+@ app.route("/send_email", methods=['GET', 'POST'])
+def send_email_controller(receiver_email, message):
+    port = 465  # For SSL
+    smtp_server = "smtp.gmail.com"
+    sender_email = "dossier.translator@gmail.com"  # new gmail
+    # receiver_email = "your@gmail.com"  # Enter receiver address
+    password = "anrwqajkaglfllpl"
+    forgot_password_message = """\
+    Subject: Restore your password
+
+    This message is sent from Python."""
+
+    notify_on_done_message = """\
+    Subject: Your file is done
+
+    Your file is now ready and can be easily fetched via the app on Archive page."""
+
+    message_to_send = forgot_password_message if message == 0 else notify_on_done_message
+
+    # sender = 'from@example.com'
+    # receivers = [receiver_email]
+
+    # message = """From: From Person <from@example.com>
+    # To: To Person <to@example.com>
+    # Subject: SMTP email example
+
+    # This is a test message.
+    # """
+    smtpObj = smtplib.SMTP('smtp.gmail.com', 587)
+    # smtpObj = smtplib.SMTP("localhost")
+    # start TLS for security
+    smtpObj.starttls()
+    # Authentication
+    smtpObj.login(sender_email, password)
+    # sending the mail
+    smtpObj.sendmail(sender_email, receiver_email, message_to_send)
+    # terminating the session
+    smtpObj.quit()
+
+    print("Successfully sent email to: " + receiver_email)
 
 
 def main():
