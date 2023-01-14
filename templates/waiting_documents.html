@@ -51,39 +51,21 @@
 
   <div class="container">
     <h1>Waiting Documents Page</h1>
-    <p>A waiting documents to check:</p>
+    <p>Documents waiting for you to validate translation:</p>
     <form class='topright'>
       <button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary dropdown-toggle"
         type="button" data-bs-toggle="dropdown" aria-expanded="false">
         User
       </button>
       <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#">Setting</a></li>
+        <li><a class="dropdown-item" href="#">Settings</a></li>
         <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
       </ul>
     </form>
     <br>
-    <div id="buttons">
 
-    </div>
+    <div id="buttons"> </div>
 
-    <!-- <button
-      style="background:rgb(214, 212, 212); width:20%; padding:1%; border-radius: 4px; border :1px solid black; margin: auto; display: block;"
-      onclick="check()">File 1</button>
-    <br>
-    <button
-      style="background:rgb(214, 212, 212); width:20%; padding:1%; border-radius: 4px; border :1px solid black; margin: auto; display: block;"
-      onclick="check()">File 2</button>
-    <br>
-    <button
-      style="background:rgb(214, 212, 212); width:20%; padding:1%; border-radius: 4px; border :1px solid black; margin: auto; display: block;"
-      onclick="check()">File 3</button>
-    <br>
-    <button
-      style="background:rgb(214, 212, 212); width:20%; padding:1%; border-radius: 4px; border :1px solid black; margin: auto; display: block;"
-      onclick="check()">File 4</button> -->
-
-  </div>
 </body>
 
 
@@ -110,17 +92,57 @@
     for (let i = 0; i < fileNames.length; i++) {
       let path = fileNames[i].split("/");   // [. , files , input_files , users , peppa , peppa_FoCKHCEeEv.txt]
       fileNameWithExtension = path.slice(-1) // [peppa_FoCKHCEeEv.txt]
-      fileName = fileNameWithExtension[0].split(".")
+      fileName = fileNameWithExtension[0].split(".") // peppa_FoCKHCEeEv -- remove extension
       buttons.innerHTML +=
         '<button style="background:rgb(214, 212, 212); width:20%; padding:1%; border-radius: 4px; border :1px solid black; margin: auto; display: block;"\n' +
-        'onclick="loadFile(\'' + fileName[0] + '\')">' + fileName[0] + '</button>'
+        'onclick="loadFile(\'' + fileName[0] + '\',\'' + fileNames[i] + '\')">' + fileName[0] + '</button>'
       console.log(fileName[0])
     }
 
   }
 
-  function loadFile(fileName) {
+  function loadFile(fileName, path) {
     console.log("fileName: " + fileName)
+    console.log("path: " + path)
+    get_file_lines_from_server(path)
+  }
+
+  function get_file_lines_from_server(path) {
+    $.ajax({
+      url: "/get_file_lines_from_server",
+      type: 'GET',
+      dataType: 'json', // added data type
+      data: {
+        path: path
+      },
+      success: function (res) {
+        console.log(res);
+        console.log("successfullt returned from server and laoded file lines")
+        var original_lines = res.original_lines
+        var translated_lines = res.translated_lines
+        loadTable(original_lines, translated_lines)
+      }
+    })
+  }
+
+
+  function loadTable(original_lines, translated_lines) {
+    // window.location.href = "/tester_check.html?original_lines=" + original_lines + "&translated_lines=" + translated_lines;
+    // lines = [original_lines, translated_lines]
+    console.log(original_lines)
+    console.log(translated_lines)
+    localStorage.setItem('original_lines', JSON.stringify(original_lines));
+    localStorage.setItem('translated_lines', JSON.stringify(translated_lines));
+    window.location.href = "/testerchecktranslation"
+
+
+    // $.ajax({
+    //   url: "/tester_check.html", // ?lines=" + lines,
+    //   data: JSON.stringify(lines),
+    //   success: function (msg) {
+    //     $('.answer').html(msg);
+    //   }
+    // });
   }
 
   function check() {

@@ -1,177 +1,232 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script> 
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+		integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+		integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+		crossorigin="anonymous"></script>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
-	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
-
-
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+		integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+		integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+		crossorigin="anonymous"></script>
 
 </head>
 <style>
-    body {
-    padding: 5%;
-    font-family: Arial, Helvetica, sans-serif;
-    background-color: rgba(241, 227, 227, 0.867);
-  }
+	/* body {
+		padding: 5%;
+		font-family: Arial, Helvetica, sans-serif;
+		background-color: rgba(241, 227, 227, 0.867);
+	} */
 
-  .container {
-    padding: 4%;
-    border: 1px solid black;
-    position: relative; 
-	  background-color: white;
-      }
-	  
-	  .topright {
-	  position: absolute;  
-    top: 0;  
-	  right: 0;	
+	.container {
+		padding: 4%;
+		border: 1px solid black;
+		position: relative;
+		background-color: white;
 	}
 
- .topleft {
-	  position: absolute;  
-	  top: 0;  
-	  left: 0;	
+	.topright {
+		position: absolute;
+		top: 0;
+		right: 0;
 	}
-	table, th, td {
-  border:1px solid black;
-  text-align:center;
-}
 
+	.topleft {
+		position: absolute;
+		top: 0;
+		left: 0;
+	}
+
+	table {
+		font-family: arial, sans-serif;
+		border-collapse: collapse;
+		width: 100%;
+	}
+
+	table .content {
+		width: 100%
+	}
+
+	td,
+	th {
+		border: 1px solid #dddddd;
+		text-align: left;
+		padding: 8px;
+		width: 40%;
+	}
+
+	tr:nth-child(even) {
+		background-color: #dddddd;
+	}
+
+	.checked {
+		text-align: center;
+	}
 </style>
 
 <body>
 
-  <div class="container">
-        <h1>Checking the translation</h1>
-            <form class='topright'>
-              <button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                User</button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Setting</a></li>
-                <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
-              </ul>
-            </form>
-			
-			 <button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary topleft" type="button">File</button>
-			<br>
-			<table style="width:100%;">
-			  <tr style="background:rgb(214, 212, 212);">
-				<th>Orginal</th>
-				<th>Translated</th>
-				<th style="width:5%;">Checked</th>
-			  </tr>
-			  <tr>
-			 <td>Sentence</td>
-				<td contenteditable title="Click to edit it!">Sentence</td>	
-			  <td><input type="checkbox" id="ch1"></td>
-			  </tr>
-		
-			  <tr>
-			<td>Sentence</td>
-				<td contenteditable title="Click to edit it!">Sentence</td>	
-				<td><input type="checkbox" id="ch2"></td>
-			  </tr>
-			  <tr>
-			 <td>Sentence</td>
-				<td contenteditable title="Click to edit it!">Sentence</td>	
-				<td><input type="checkbox" id="ch3"></td>
-			  </tr>
-			    <tr>
-			 <td>Sentence</td>
-				<td contenteditable title="Click to edit it!">Sentence</td>	
-				<td><input type="checkbox" id="ch4"></td>
-			  </tr>
-			<tr>
-				 <td>Sentence</td>
-				<td contenteditable title="Click to edit it!">Sentence</td>	
-				<td><input type="checkbox" id="ch5"></td>
+	<div class="container">
+		<h1>Checking the translation</h1>
+		<form class='topright'>
+			<button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary dropdown-toggle"
+				type="button" data-bs-toggle="dropdown" aria-expanded="false">
+				User</button>
+			<ul class="dropdown-menu">
+				<li><a class="dropdown-item" href="#">Settings</a></li>
+				<li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+			</ul>
+		</form>
 
-			  </tr>
-			  <tr>
-			 <td>Sentence</td>
-				<td contenteditable title="Click to edit it!">Sentence</td>	
-				<td><input type="checkbox" id="ch6"></td>
-			  </tr>
-			  <tr>
-			 <td>Sentence</td>
-				<td contenteditable title="Click to edit it!">Sentence</td>	
-				<td><input type="checkbox" id="ch7"></td>
-			  </tr>
-			  <tr>
-			 <td>Sentence</td>
-				<td contenteditable title="Click to edit it!">Sentence</td>	
-				<td><input type="checkbox" id="ch8"></td>
-			  </tr>
-			  <tr>
-				<td>Sentence</td>
-				<td contenteditable title="Click to edit it!">Sentence</td>	
-				<td><input type="checkbox" id="ch9"></td>				
-			  </tr>
+		<button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary topleft"
+			type="button">File</button>
+		<br>
+		<table style="width:100%; display:block;">
+
+			<!-- <thead style="background:rgb(214, 212, 212);">
+				<tr>
+					<th>Orginal</th>
+					<th>Translated</th>
+					<th id="allcb" name="allcb" style="width:15%;" type="checkbox">Checked</th>
+				</tr>
+			</thead>
+			<tbody id="table" style="display:block;	overflow-y: auto; overflow-x: hidden;  height: 50vh;"></tbody>
+		</table> -->
+
+			<table id="table">
+				<tr>
+					<th>Orginal</th>
+					<th>Translated</th>
+					<th id="checked">Checked</th>
+				</tr>
+				<!-- <tbody id="table" style="display:block;	overflow-y: auto; overflow-x: hidden;  height: 50vh; width: 100%;"> -->
 			</table>
-			<br>
-			<br>
+
+
 			<div style="text-align:center;">
-			<button style="border :1px solid black; color:white; margin: auto; display: block; width:20%; display:inline-block;" class="btn btn-primary" type="button" onclick="Required_checkboxes()">Submit and send to user</button>
-			<button style="border :1px solid black; color:white; margin: auto; display: block; width:20%; display:inline-block;" class="btn btn-primary" type="button" onclick="Cancel()">Cancel</button>
+				<button
+					style="border :1px solid black; color:white; margin: auto; display: block; width:20%; display:inline-block;"
+					class="btn btn-primary" type="button" onclick="Required_checkboxes()">Submit and send to user</button>
+				<button
+					style="border :1px solid black; color:white; margin: auto; display: block; width:20%; display:inline-block;"
+					class="btn btn-primary" type="button" onclick="Cancel()">Cancel</button>
 			</div>
-			</div>
-	  
- 
- 
-  
-	 <script>
-     
-    function logout() {
-      window.location.href = "/"
-    }
-	
-	function Required_checkboxes(){
-		var ch1= document.getElementById("ch1");  
-		var ch2= document.getElementById("ch2");
-		var ch3= document.getElementById("ch3");
-		var ch4= document.getElementById("ch4");
-		var ch5= document.getElementById("ch5");
-		var ch6= document.getElementById("ch6");
-		var ch7= document.getElementById("ch7");
-		var ch8= document.getElementById("ch8");
-		var ch9= document.getElementById("ch9");
+	</div>
 
-		if((ch1.checked) && (ch2.checked) && (ch3.checked) && (ch4.checked) && (ch5.checked) && (ch6.checked) && (ch7.checked)
-		 && (ch8.checked) && (ch9.checked)){
-			Confirm_the_translation();
-		} 
-		else {
-			alert("You must select all the checkboxes!");
+
+
+
+	<script>
+
+		const original_lines = JSON.parse(localStorage.getItem('original_lines'));
+		const translated_lines = JSON.parse(localStorage.getItem('translated_lines'));
+
+
+		$(document).ready(function () {
+
+			table = document.getElementById('table')
+
+			for (let i = 0; i < original_lines.length; i++) {
+				if (original_lines[i] === "\n") {
+					continue;
+				}
+				row = table.insertRow(-1)
+				var cell1 = row.insertCell(0);
+				var cell2 = row.insertCell(1);
+				var cell3 = row.insertCell(2);
+				cell1.innerHTML = '<td>' + original_lines[i] + '</td>';
+				cell2.innerHTML = translated_lines[i]
+				cell2.contentEditable = true;
+				cell3.innerHTML = '<td style="text-align: center"><input name="cb[]" type="checkbox" id=cb' + i + '></td>'
+			}
+		});
+		// 				  <td><input type="checkbox" id="ch1"></td>
+
+		/*
+* Click on select all checkbox
+*/
+		// $('#allcb').click(function (e) {
+		// 	$('[name="cb[]"]').prop('checked', this.checked);
+		// });
+
+		// /*
+		// * Click on another checkbox can affect the select all checkbox
+		// */
+		// $('[name="cb[]"]').click(function (e) {
+		// 	if ($('[name="cb[]"]:checked').length == $('[name="cb[]"]').length || !this.checked)
+		// 		$('#allcb').prop('checked', this.checked);
+		// });
+
+		// // Change the selector if needed
+		// var $table = $('table'),
+		// 	$bodyCells = $table.find('tbody tr:first').children(),
+		// 	colWidth;
+
+		// // Get the tbody columns width array
+		// colWidth = $bodyCells.map(function () {
+		// 	return $(this).width();
+		// }).get();
+
+		// // Set the width of thead columns
+		// $table.find('thead tr').children().each(function (i, v) {
+		// 	$(v).width(colWidth[i]);
+		// });
+
+
+
+
+		// $(function () {
+		// 	$("#allcb").click(function () {
+		// 		var chkBoxes = $("input[id^=cb]");
+		// 		chkBoxes.prop("checked", !chkBoxes.prop("checked"));
+		// 	});
+		// });
+
+		function logout() {
+			window.location.href = "/"
 		}
-	}
-	
-	
-	
-	function Confirm_the_translation(){
-	
-	  var result = window.confirm("Are you sure?");
-	  if(result){
-		    window.location.href = "/tester_homepage"
 
-	 }
-	 else{
-		<!--result.style.display = "none";-->
-	 }
-	}
-function Cancel(){
-	window.location.href = "/tester_homepage"
-}
+		function Required_checkboxes() {
 
-	
-    </script>
-	
-  </body>
+			console.log("in tester_check:")
+
+			console.log(original_lines)
+			console.log(translated_lines)
+
+		}
+
+
+
+		function Confirm_the_translation() {
+
+			var result = window.confirm("Are you sure?");
+			if (result) {
+				window.location.href = "/tester_homepage"
+
+			}
+			else {
+				<!--result.style.display = "none";-->
+			}
+		}
+		function Cancel() {
+			window.location.href = "/tester_homepage"
+		}
+
+
+	</script>
+
+</body>
+
 </html>

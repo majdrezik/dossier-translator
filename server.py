@@ -30,10 +30,10 @@ template_dir = os.path.abspath('templates/')
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__, template_folder=template_dir)
+
 UPLOAD_FOLDER = 'static/uploads'
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 app.secret_key = "doss_secret"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -515,6 +515,52 @@ def test():
     return 'hi'
 
 
+@ app.route("/get_file_lines_from_server", methods=['GET', 'POST'])
+def get_file_lines_from_server_controller():
+    if request.method == 'GET':
+        # get original file
+        args = request.args
+        path = args.get("path")
+        print(path)  # ./files/input_files/users/peppa/peppa_FoCKHCEeEv.txt
+        original_lines = _helper_get_original_file(path)
+        translated_path = './files/translated_files/' + \
+            path.split("./files/input_files/")[1]
+        print(translated_path)
+        translated_lines = _helper_get_translated_file(translated_path)
+        # get translated file ./files/translated_files/
+        print("#_translated_lines : ")
+        print(len(translated_lines))
+        print(translated_lines)
+
+        print("#_original_lines : ")
+        print(len(original_lines))
+        print(original_lines)
+
+    return jsonify(
+        original_lines=original_lines,
+        translated_lines=translated_lines
+    )
+
+
+def _helper_get_original_file(path):
+    # get original file
+    file = open(path, 'r')
+    lines = file.readlines()
+    array_of_lines = []
+    for line in lines:
+        array_of_lines.append(line)
+    return array_of_lines
+
+
+def _helper_get_translated_file(path):
+    file = open(path, 'r')
+    lines = file.readlines()
+    array_of_lines = []
+    for line in lines:
+        array_of_lines.append(line)
+    return array_of_lines
+
+
 @ app.route("/send_translation_to_tester", methods=['GET', 'POST'])
 def send_to_tester(input_file_path, translation_path, language_from, language_to):
 
@@ -647,12 +693,14 @@ def update_tester_count_for_waiting_documents(username, files_waitin):
         print("Error occurred in update_tester_count_for_waiting_documents: %s" % e)
 
 
+letters = string.ascii_letters
+rabdom_id = ''.join(random.choice(letters) for i in range(10))
+
+
 def return_input_files_path(username, table):
     new_dir = "./files/input_files/" + table + "/" + username
     if not os.path.exists(new_dir):
         os.makedirs(new_dir)
-    letters = string.ascii_letters
-    rabdom_id = ''.join(random.choice(letters) for i in range(10))
     return new_dir + "/" + username + "_" + rabdom_id + ".txt"
 
 
@@ -660,8 +708,6 @@ def return_translated_files_path(username, table):
     new_dir = "./files/translated_files/" + table + "/" + username
     if not os.path.exists(new_dir):
         os.makedirs(new_dir)
-    letters = string.ascii_letters
-    rabdom_id = ''.join(random.choice(letters) for i in range(10))
     return new_dir + "/" + username + "_" + rabdom_id + ".txt"
 
 
@@ -669,9 +715,9 @@ def read_input_pdf_convert_to_text(input_file):
     global current_logged_user
     reader = PdfReader(input_file)
     number_of_pages = len(reader.pages)
-    page = reader.pages[0]
-    text = page.extract_text()
-    print(text)
+    # page = reader.pages[0]
+    # text = page.extract_text()
+    # print(text)
     # files/users/tester3
     input_file_path = return_input_files_path(
         current_logged_user[0], current_logged_user[1]
@@ -680,7 +726,9 @@ def read_input_pdf_convert_to_text(input_file):
     with open(input_file_path, 'a+') as f:
         for page in reader.pages:   # write the whole text (all pages)
             # write each item on a new line
-            f.write("%s\n\n" % page.extract_text())
+            f.write("%s" % page.extract_text().replace('\n', '').replace(
+                '. ', '.\n\n'))
+            # f.write("%s" % page.extract_text())
 
     return input_file_path, reader   # return the files location and the reader
 
@@ -695,13 +743,20 @@ def send_to_translation(reader, language_from, language_to):
 
     translation = []
     print(f"number_of_pages in reader: {number_of_pages}")
-
+    print("translating... please hang on")
+    iterator = 1
     for page in reader.pages:
+        # if (iterator % 5 == 0):
+        #     translation.append("\n\n")
+        print("translating page: " + str(iterator))
         translation.append(
             translate(
                 page.extract_text()
+                .replace('\n', '')
+                .replace('. ', '.\n\n')
             )
         )
+        iterator += 1
 
     return translation
 
@@ -709,7 +764,8 @@ def send_to_translation(reader, language_from, language_to):
 def write_array_of_translations_to_txt_file(translation, path):
     with open(path, 'a+') as f:
         for page in translation:
-            f.write(page.replace('. ', '.\n'))
+            # f.write(page.replace('. ', '.\n'))
+            f.write(page)
 
 
 @ app.route("/translate_file", methods=['GET', 'POST'])
