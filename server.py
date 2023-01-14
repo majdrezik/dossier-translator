@@ -482,6 +482,28 @@ def allowed_file(filename):
 ################################################################################################
 
 
+@ app.route('/load_tester_homepage', methods=['GET'])
+def load_tester_homepage_controller():
+    if request.method == 'GET':
+        try:
+            cursor = conn.cursor(dictionary=True)  # to return a dictionary
+            sql = "SELECT * FROM doss_sc.testers where username=%s"
+            print(sql)
+            username = current_logged_user[0]
+            cursor.execute(sql, (username,))
+            tester = cursor.fetchone()
+            waiting_files = tester.get('num_files_waiting'),
+            files_path = tester.get('files')
+            cursor.close()
+            return jsonify(
+                username=username,
+                waiting_files=waiting_files,
+                files_path=files_path
+            )
+        except Exception as e:
+            print("Error occurred: %s" % e)
+
+
 @app.route('/')
 def upload_form():
     return render_template('index.html')
@@ -494,12 +516,58 @@ def test():
 
 
 @ app.route("/send_translation_to_tester", methods=['GET', 'POST'])
-def send_to_tester(input_file_path, translation_path,
-                   language_from, language_to):
-    if (assign_file_to_tester(language_from, language_to) == False):
+def send_to_tester(input_file_path, translation_path, language_from, language_to):
+
+    can_tester_help, tester_username = assign_file_to_tester(
+        language_from, language_to)
+
+    if (can_tester_help == False):
         return "No tester can assest with your testing now..."
-    return render_template('tester_check_translation.html')
-    # return render_template('tester_check_translation.html' , input_file_path=input_file_path ,translation_path=translation_path)
+
+    tester_files_updated = tester_get_current_files(
+        language_from, tester_username, input_file_path)
+
+    tester_update_files(tester_username, tester_files_updated)
+
+
+def tester_get_current_files(language_from, tester_username, input_file_path):
+    try:
+        cursor = conn.cursor(dictionary=True)  # to return a dictionary
+        query = "SELECT * FROM doss_sc.testers where username=%s"
+        print(query)
+        cursor.execute(query, (tester_username,))
+        tester = cursor.fetchone()
+        print(tester)
+        tester_name = tester.get('username')
+        tester_files = tester.get('files')
+
+        print("tester_name: " + tester_name)
+        print("tester_files: " + tester_files)
+
+        if tester_files is None or tester_files == "":
+            tester_files_updated = input_file_path
+        else:
+            tester_files_updated = tester_files + ',' + input_file_path
+        cursor.close()
+        print(f"successfully fetched files of tester {tester_name}")
+        return tester_files_updated
+    except Exception as e:
+        print("Error occurred in tester_get_current_files: %s" % e)
+
+
+def tester_update_files(tester_name, tester_files_updated):
+    try:
+        cursor = conn.cursor(dictionary=True)
+        query = f'''
+            UPDATE doss_sc.testers SET files = '{tester_files_updated}' WHERE username = '{tester_name}'
+            '''
+        print(query)
+        cursor.execute(query)
+        print(f"successfully updated files for tester {tester_name}")
+        conn.commit()
+        cursor.close()
+    except Exception as e:
+        print("Error occurred in tester_update_files: %s" % e)
 
 
 def assign_file_to_tester(language_from, language_to):
@@ -542,7 +610,7 @@ def assign_file_to_tester(language_from, language_to):
         print("closed cursor in assign_file_to_tester")
         update_tester_count_for_waiting_documents(
             tester_username, files_waitin)
-        return True
+        return True, tester_username
     except Exception as e:
         print("Error occurred in assign_file_to_tester: %s" % e)
 

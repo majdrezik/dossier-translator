@@ -233,6 +233,8 @@
     response.done(function (data) {
       console.log("POST request is done")
       console.log('redirecting to: ' + data.redirect_path)
+      if (data.redirect_path === '/')
+        alert("Wrong credentials")
       window.location.href = data.redirect_path; //relative to domain
     });
 

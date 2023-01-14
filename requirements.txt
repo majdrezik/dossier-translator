@@ -6,3 +6,5 @@ reportlab
 mysql-connector-python
 PyPDF2
 Jinja2
+secure-smtplib
+Werkzeug
