@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, make_response
+from flask import Flask, render_template, request, jsonify, make_response, send_file, send_from_directory, current_app
 import os
 from os import environ
 import json
@@ -20,6 +20,7 @@ import string
 import smtplib
 from fileinput import filename
 from werkzeug.utils import secure_filename
+import glob
 
 # con = sqlite3.connect("dossier.db")
 conn = None
@@ -521,6 +522,7 @@ def get_file_lines_from_server_controller():
         # get original file
         args = request.args
         path = args.get("path")
+        file_name = args.get("fileName")
         print(path)  # ./files/input_files/users/peppa/peppa_FoCKHCEeEv.txt
         original_lines = _helper_get_original_file(path)
         translated_path = './files/translated_files/' + \
@@ -538,7 +540,8 @@ def get_file_lines_from_server_controller():
 
     return jsonify(
         original_lines=original_lines,
-        translated_lines=translated_lines
+        translated_lines=translated_lines,
+        file_name=file_name
     )
 
 
@@ -563,8 +566,10 @@ def _helper_get_translated_file(path):
 
 @ app.route("/send_translation_to_tester", methods=['GET', 'POST'])
 def send_to_tester(input_file_path, translation_path, language_from, language_to):
-
-    can_tester_help, tester_username = assign_file_to_tester(
+    print("###############")
+    print("send_to_tester")
+    print("###############")
+    can_tester_help, tester_username, tester_email = assign_file_to_tester(
         language_from, language_to)
 
     if (can_tester_help == False):
@@ -574,10 +579,107 @@ def send_to_tester(input_file_path, translation_path, language_from, language_to
         language_from, tester_username, input_file_path)
 
     tester_update_files(tester_username, tester_files_updated)
+    print("###############")
+    print("sending email to username: " + tester_username)
+    print("sending email to email: " + tester_email)
+    print("###############")
+    send_email_controller(tester_username, tester_email, 0)
+
+
+@ app.route("/post_tester_check", methods=['GET', 'POST'])
+def post_tester_check_controller():
+    print("##################")
+    print("called post_tester_check_controller")
+    if request.method == 'POST':
+        print("post")
+        req = request.get_json()
+        print("GOT here to post_tester_check.server on route /post_tester_check")
+        print(req)
+        print("type of req ")
+        print(type(req))    # list
+        create_exportable_file_from_tester_edits(req)
+        user = json.loads(
+            get_user_by_name_as_json(req[0])
+        )  # username is at index 0
+        send_email_controller(user['username'], user['email'], 1)
+
+    return "200"
+
+
+def create_exportable_file_from_tester_edits(req):
+    username = req[0]
+    letters = string.ascii_letters
+    rabdom_id = ''.join(random.choice(letters) for i in range(5))
+    new_dir = "./files/edited_files/" + username
+    if not os.path.exists(new_dir):
+        os.makedirs(new_dir)
+    path = new_dir + "/" + username + rabdom_id + ".txt"
+    with open(path, 'a+') as f:
+        # for line in req:
+        i = 1
+        while i < len(req):
+            f.write(req[i] + "\n")
+            i = i + 1
+
+
+@ app.route("/load_user_archive", methods=['GET', 'POST'])
+def load_user_archive_controller():
+    # All files and directories ending with .txt and that don't begin with a dot:
+    # print(glob.glob("/home/adam/*.txt"))
+    req = request.get_json()
+    print(type(req))
+    username = req['username']
+    print("username: ")
+    print(username)
+
+    path_to_files = "./files/edited_files/" + username + "/*.txt"
+    print("path: " + path_to_files)
+
+    print(glob.glob(path_to_files))
+    return jsonify(
+        files=glob.glob(path_to_files),
+        # num_of_files=num_of_files
+    )
+    # num_of_files = 0
+    # files = []
+    # for file in files:
+    #     num_of_files = num_of_files + 1
+    #     print(file)
+    #     files.append(file)
+    # print("files")
+    # print(files)
+    # print("num_of_files: ")
+    # print(num_of_files)
+    # return send_from_directory(path_to_files,
+    #                            filename, as_attachment=True)
+
+    return "200"
+
+
+# @app.route('/download/<fileName>')
+@app.route('/download')
+def downloadFile():
+    # req = request.get_json()
+    # print(type(req))
+    file_name = request.args['fileName']
+    username = request.args['username']
+    print("file_name: ")
+    print(file_name)
+    dir = "./files/edited_files/" + username + "/"  # + file_name + ".txt"
+    # uploads = os.path.join(current_app.root_path, dir)
+    # Returning file from appended path
+    # return send_from_directory(directory=uploads, filename=file_name + ".txt")
+    return send_from_directory(dir, file_name+".txt", as_attachment=True)
+    # path_to_files = "./files/edited_files/" + username + "/*.txt"
+    # print("path: " + path_to_files)
+    return "200"
 
 
 def tester_get_current_files(language_from, tester_username, input_file_path):
     try:
+        print("###############")
+        print("tester_get_current_files")
+        print("###############")
         cursor = conn.cursor(dictionary=True)  # to return a dictionary
         query = "SELECT * FROM doss_sc.testers where username=%s"
         print(query)
@@ -603,6 +705,9 @@ def tester_get_current_files(language_from, tester_username, input_file_path):
 
 def tester_update_files(tester_name, tester_files_updated):
     try:
+        print("###############")
+        print("tester_update_files")
+        print("###############")
         cursor = conn.cursor(dictionary=True)
         query = f'''
             UPDATE doss_sc.testers SET files = '{tester_files_updated}' WHERE username = '{tester_name}'
@@ -619,14 +724,17 @@ def tester_update_files(tester_name, tester_files_updated):
 def assign_file_to_tester(language_from, language_to):
     try:
         # global conn
+        print("###############")
+        print("assign_file_to_tester")
+        print("###############")
         cursor = conn.cursor(dictionary=True)  # to return a dictionary
         soreted_languages = [language_from, language_to]
         soreted_languages.sort()
         for language in soreted_languages:
             print(language)
 
-        query = f"""SELECT username, num_files_waiting FROM ( /* selecting username */
-            SELECT username, num_files_waiting, languages AS languages2 /* selecting num_files_waiting */
+        query = f"""SELECT username, num_files_waiting, email FROM ( /* selecting username */
+            SELECT username, num_files_waiting,email, languages AS languages2 /* selecting num_files_waiting */
             FROM doss_sc.testers /* FROM doss_sc.testers */
             ) /* end */
             AS testers /*AS testers*/
@@ -647,8 +755,12 @@ def assign_file_to_tester(language_from, language_to):
         print("tester username : ")
         print(tester.get('username'))
         # cursor.close()
+        print("tester email : ")
+        tester_email = tester.get('email')
+        print(tester_email)
         tester_username = tester.get('username')
         files_waitin = tester.get('num_files_waiting')
+        # tester_email = tester.get('email')
         print("waiting documents before update: ")
         print(files_waitin)
         print("closing cursor in assign_file_to_tester")
@@ -656,7 +768,7 @@ def assign_file_to_tester(language_from, language_to):
         print("closed cursor in assign_file_to_tester")
         update_tester_count_for_waiting_documents(
             tester_username, files_waitin)
-        return True, tester_username
+        return True, tester_username, tester_email
     except Exception as e:
         print("Error occurred in assign_file_to_tester: %s" % e)
 
@@ -701,14 +813,14 @@ def return_input_files_path(username, table):
     new_dir = "./files/input_files/" + table + "/" + username
     if not os.path.exists(new_dir):
         os.makedirs(new_dir)
-    return new_dir + "/" + username + "_" + rabdom_id + ".txt"
+    return new_dir + "/" + username + "--" + rabdom_id + ".txt"
 
 
 def return_translated_files_path(username, table):
     new_dir = "./files/translated_files/" + table + "/" + username
     if not os.path.exists(new_dir):
         os.makedirs(new_dir)
-    return new_dir + "/" + username + "_" + rabdom_id + ".txt"
+    return new_dir + "/" + username + "--" + rabdom_id + ".txt"
 
 
 def read_input_pdf_convert_to_text(input_file):
@@ -726,9 +838,33 @@ def read_input_pdf_convert_to_text(input_file):
     with open(input_file_path, 'a+') as f:
         for page in reader.pages:   # write the whole text (all pages)
             # write each item on a new line
-            f.write("%s" % page.extract_text().replace('\n', '').replace(
+            # f.write("%s" % page.extract_text().replace('\n', '').replace(
+            #     '. ', '.\n\n'))
+
+            # f.write("%s" % page.extract_text().replace(
+            #     '. ', '.\n\n')).replace('\n', '')
+            f.write("%s" % page.extract_text().replace(
                 '. ', '.\n\n'))
-            # f.write("%s" % page.extract_text())
+
+            # page_with_lines = page.extract_text()
+            # print("$$$$$$ page_with_lines $$$$$$$$$")
+            # print(page_with_lines)
+            # print("$$$$$$$$$$$$$$$")
+            # page_with_lines = page_with_lines.replace(". ", "\n ")
+            # page_with_lines = page_with_lines.replace(".\n", "\n ")
+            # page_as_array = page_with_lines.split("\n ")
+            # print("$$$$$$$$$$$$$$$")
+            # print(page_as_array)
+            # print("$$$$$$$$$$$$$$$")
+            # for line in page_as_array:
+            #     f.write(line)
+            #     f.write("\n")
+            # if (line == ''):
+            #     f.write("\n")
+
+            # pat = ('(?<!Dr)(?<!Esq)\. +(?=[A-Z])')
+            # page_with_lines = re.sub(pat, '.\n', page.extract_text())
+            # f.write(page_with_lines)
 
     return input_file_path, reader   # return the files location and the reader
 
@@ -752,7 +888,7 @@ def send_to_translation(reader, language_from, language_to):
         translation.append(
             translate(
                 page.extract_text()
-                .replace('\n', '')
+                # .replace('\n', '')
                 .replace('. ', '.\n\n')
             )
         )
@@ -803,29 +939,51 @@ def translate_file(file, language_from, language_to):
     return 'ok'
 
 
+#  send_email_controller(tester_username, tester_email, 0)
 @ app.route("/send_email", methods=['GET', 'POST'])
-def send_email_controller(receiver_email, message):
+def send_email_controller(username, receiver_email, index_message):
     port = 465  # For SSL
     smtp_server = "smtp.gmail.com"
     sender_email = "dossier.translator@gmail.com"  # new gmail
     # receiver_email = "your@gmail.com"  # Enter receiver address
     password = "anrwqajkaglfllpl"
+
+    notify_tester_on_new_file = '''\
+       Subject: You've received a new file to check\n\n
+        Hello ''' + username + ''',\nYou've received a new file to check.'''
+
     forgot_password_message = """\
-    Subject: Restore your password
+    Subject: Restore your password\n\n
 
     This message is sent from Python."""
 
     notify_on_done_message = """\
-    Subject: Your file is done
+    Subject: Your file is ready\n\n
+    Hello """ + username + """,\nYour file is now ready and can be easily fetched via the app on Archive page."""
 
-    Your file is now ready and can be easily fetched via the app on Archive page."""
-
-    message_to_send = forgot_password_message if message == 0 else notify_on_done_message
-
+    if (index_message == 0):
+        message_to_send = notify_tester_on_new_file
+    elif index_message == 1:
+        message_to_send = notify_on_done_message
+    elif index_message == 2:
+        message_to_send = forgot_password_message
+    else:
+        print("Invalid option to send email")
+        return False
+    # match index_message:
+    #     case 0:
+    #         message_to_send = notify_tester_on_new_file
+    #     case 1:
+    #         message_to_send = notify_on_done_message
+    #     case 2:
+    #         message_to_send = forgot_password_message
+    #     case _:
+    #         print("Invalid option to send email")
+    #         return False
     # sender = 'from@example.com'
     # receivers = [receiver_email]
 
-    # message = """From: From Person <from@example.com>
+    # message = """From: From Person < from @ example.com >
     # To: To Person <to@example.com>
     # Subject: SMTP email example
 

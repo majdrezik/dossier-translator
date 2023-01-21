@@ -85,14 +85,14 @@
   });
 
   // ./files/input_files/users/peppa/peppa_FoCKHCEeEv.txt,./files/input_files/users/majdrezik/majdrezik_VAbHpLVjlk.txt
-
+  var fileName
   function loadPageWithFiles(files_path, num_waiting_files) {
     buttons = document.getElementById('buttons')
     var fileNames = files_path.split(","); // [./files/input_files/users/peppa/peppa_FoCKHCEeEv.txt , ./files/input_files/users/majdrezik/majdrezik_VAbHpLVjlk.txt]
     for (let i = 0; i < fileNames.length; i++) {
       let path = fileNames[i].split("/");   // [. , files , input_files , users , peppa , peppa_FoCKHCEeEv.txt]
       fileNameWithExtension = path.slice(-1) // [peppa_FoCKHCEeEv.txt]
-      fileName = fileNameWithExtension[0].split(".") // peppa_FoCKHCEeEv -- remove extension
+      var fileName = fileNameWithExtension[0].split(".") // peppa_FoCKHCEeEv -- remove extension
       buttons.innerHTML +=
         '<button style="background:rgb(214, 212, 212); width:20%; padding:1%; border-radius: 4px; border :1px solid black; margin: auto; display: block;"\n' +
         'onclick="loadFile(\'' + fileName[0] + '\',\'' + fileNames[i] + '\')">' + fileName[0] + '</button>'
@@ -104,35 +104,39 @@
   function loadFile(fileName, path) {
     console.log("fileName: " + fileName)
     console.log("path: " + path)
-    get_file_lines_from_server(path)
+    get_file_lines_from_server(fileName, path)
   }
 
-  function get_file_lines_from_server(path) {
+  function get_file_lines_from_server(fileName, path) {
     $.ajax({
       url: "/get_file_lines_from_server",
       type: 'GET',
       dataType: 'json', // added data type
       data: {
-        path: path
+        path: path,
+        fileName: fileName
       },
       success: function (res) {
         console.log(res);
         console.log("successfullt returned from server and laoded file lines")
         var original_lines = res.original_lines
         var translated_lines = res.translated_lines
-        loadTable(original_lines, translated_lines)
+        var fileName = res.file_name
+        loadTable(fileName, original_lines, translated_lines)
       }
     })
   }
 
 
-  function loadTable(original_lines, translated_lines) {
+  function loadTable(fileName, original_lines, translated_lines) {
     // window.location.href = "/tester_check.html?original_lines=" + original_lines + "&translated_lines=" + translated_lines;
     // lines = [original_lines, translated_lines]
     console.log(original_lines)
     console.log(translated_lines)
     localStorage.setItem('original_lines', JSON.stringify(original_lines));
     localStorage.setItem('translated_lines', JSON.stringify(translated_lines));
+    console.log("fileName: " + fileName.split("--")[0])
+    localStorage.setItem('fileName', fileName.split("--")[0])
     window.location.href = "/testerchecktranslation"
 
 

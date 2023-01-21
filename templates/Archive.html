@@ -1,16 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script> 
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+<head>
+  <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+    integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+    integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+    crossorigin="anonymous"></script>
+
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <style>
-    body {
+  body {
     padding-top: 9%;
     font-family: Arial, Helvetica, sans-serif;
     background-color: rgba(241, 227, 227, 0.867);
@@ -19,90 +26,168 @@
   .container {
     padding: 4%;
     border: 1px solid black;
-    position: relative; 
-	  background-color: white;
-      }
-	  
-	  .topright {
-	  position: absolute;  
-    top: 0;  
-	  right: 0;	
-	}
+    position: relative;
+    background-color: white;
+  }
 
-      .img1{
-  vertical-align: text-bottom;
-}
+  .topright {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
 
-.Name {
-	text-align:center;
-	display: inline-block;
-	width:3%;
-	right: 50%;
-	}
-	
-.Name .cf-medium {
-	width:97%;}
-	
-	
-.right {
-  position: absolute;
-  right: 85%;
-}
+  .img1 {
+    vertical-align: text-bottom;
+  }
 
-.right1{
-  position: absolute;
-  right: 80%;
-}
+  .Name {
+    text-align: center;
+    display: inline-block;
+    width: 3%;
+    right: 50%;
+  }
+
+  .Name .cf-medium {
+    width: 97%;
+  }
 
 
+  .right {
+    position: absolute;
+    right: 85%;
+  }
+
+  .right1 {
+    position: absolute;
+    right: 80%;
+  }
 </style>
 
 <body>
 
-    <div class="container">
-        <h1>Archive Page</h1>
-            <form class='topright'>
-              <button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                User
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="#">Setting</a></li>
-                <li><a class="dropdown-item" href="#" onclick="Archive()">Archive</a></li>
-                <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
-              </ul>
-            </form>
-			<br>
-			<br>
-			<br>
-		
-            <div class="input-group mb-3 ">
-                
-                <ul>
-				<input class="img1 right" type="image" src="https://cdn-icons-png.flaticon.com/512/4020/4020167.png" alt="Submit" style="float:right" width="30" height="30" onclick="Print()">
-                <input class="img1 right1" type="image" src="https://www.pngkey.com/png/full/11-115335_download-icon-png-downloading-icon.png" alt="Submit" style="float:right" width="30" height="30">
-                    <li>Document 1</li><br> 
-				<input class="img1 right" type="image" src="https://cdn-icons-png.flaticon.com/512/4020/4020167.png" alt="Submit" style="float:right" width="30" height="30" onclick="Print()">
-                <input class="img1 right1" type="image" src="https://www.pngkey.com/png/full/11-115335_download-icon-png-downloading-icon.png" alt="Submit" style="float:right" width="30" height="30">
-                    <li>Document 2</li><br> 
-				<input class="img1 right" type="image" src="https://cdn-icons-png.flaticon.com/512/4020/4020167.png" alt="Submit" style="float:right" width="30" height="30" onclick="Print()">
-                <input class="img1 right1" type="image" src="https://www.pngkey.com/png/full/11-115335_download-icon-png-downloading-icon.png" alt="Submit" style="float:right" width="30" height="30">
-                    <li>Document 3</li><br>
-                  </ul>
-				  
-				   
-                  </div>
-				
-      </div>
-	  
-	  
- 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+  <div class="container">
+    <h1>Archive</h1>
+    <!-- <form class='topright'>
+      <button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary dropdown-toggle"
+        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        User
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">Setting</a></li>
+        <li><a class="dropdown-item" href="#" onclick="Archive()">Archive</a></li>
+        <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+      </ul>
+    </form> -->
+    <br>
+    <br>
+    <br>
 
-    
-	
-	 <script>
-      function Archive() {
+    <div class="input-group mb-3 ">
+      <p id="test"></p>
+      <!-- <ul id="list"> -->
+      <!-- <input class="img1 right" type="image" src="https://cdn-icons-png.flaticon.com/512/4020/4020167.png"
+          alt="Submit" style="float:right" width="30" height="30" onclick="Print()">
+        <input class="img1 right1" type="image"
+          src="https://www.pngkey.com/png/full/11-115335_download-icon-png-downloading-icon.png" alt="Submit"
+          style="float:right" width="30" height="30">
+        <li>Document 1</li><br>
+        <input class="img1 right" type="image" src="https://cdn-icons-png.flaticon.com/512/4020/4020167.png"
+          alt="Submit" style="float:right" width="30" height="30" onclick="Print()">
+        <input class="img1 right1" type="image"
+          src="https://www.pngkey.com/png/full/11-115335_download-icon-png-downloading-icon.png" alt="Submit"
+          style="float:right" width="30" height="30">
+        <li>Document 2</li><br>
+        <input class="img1 right" type="image" src="https://cdn-icons-png.flaticon.com/512/4020/4020167.png"
+          alt="Submit" style="float:right" width="30" height="30" onclick="Print()">
+        <input class="img1 right1" type="image"
+          src="https://www.pngkey.com/png/full/11-115335_download-icon-png-downloading-icon.png" alt="Submit"
+          style="float:right" width="30" height="30">
+        <li>Document 3</li><br> -->
+      <!-- </ul> -->
+
+
+    </div>
+
+  </div>
+
+
+
+  <script>
+
+    const username = JSON.parse(localStorage.getItem('username'));
+    const email = JSON.parse(localStorage.getItem('email'));
+    $(document).ready(function () {
+
+      var user = {
+        username: username,
+      }
+      const req = JSON.stringify(user)
+      $.ajax({
+        type: 'POST',
+        url: "/load_user_archive",
+        contentType: "application/json",
+        data: JSON.stringify(JSON.parse(req)), //{ response: response_array },
+        success: function (data) {
+          var files = data.files
+          console.log("typeof files: " + typeof files)
+          console.log(Array.isArray(files)) // true => files = [array]
+          loadList(files)
+        }
+      });
+    })
+
+
+    function loadList(files) {
+      // var list = document.getElementById('list')
+      // for (let i = 0; i < NumOfFiles; i++) {
+      //   // var li = document.createElement("li");
+      //   // li.appendChild(document.createTextNode("Four"));
+      //   // li.setAttribute("id", "element4"); // added line
+      //   // ul.appendChild(li);
+      //   // alert(li.id);
+      //   list.innerHTML += ```
+      //   <input class="img1 right1" type="image"
+      //     src="https://www.pngkey.com/png/full/11-115335_download-icon-png-downloading-icon.png" alt="Submit"
+      //     style="float:right" width="30" height="30">
+      //   ```
+      // }
+
+
+      // buttons = document.getElementById('buttons')
+      // let path = fileNames[i].split("/");   // [. , files , input_files , users , peppa , peppa_FoCKHCEeEv.txt]
+      // fileNameWithExtension = path.slice(-1) // [peppa_FoCKHCEeEv.txt]
+      // var fileName = fileNameWithExtension[0].split(".") // peppa_FoCKHCEeEv -- remove extension
+
+
+      var test = document.getElementById('test')
+      // ./files/edited_files/majd_rezik/majd_rezikwrqcy.txt
+      for (let i = 0; i < files.length; i++) {
+        fileName = files[i].split("/") // [., files, edited_files, majd_rezik, majd_rezikwrqcy.txt]
+        fileNameWithExtension = fileName.slice(-1) // [majd_rezikwrqcy.txt]
+        fileName = fileNameWithExtension[0].split(".") // fileName[0]
+        // test.innerHTML += fileName + "<br>"
+        // test.innerHTML += `< input class="img1 right1" type = "image"
+        //    src="https://www.pngkey.com/png/full/11-115335_download-icon-png-downloading-icon.png" alt="Submit"
+        //      style="float:right" width="30" height="30">
+        // `
+        test.innerHTML += '<button onclick="test(\'' + fileName[0] + '\')">' + fileName[0] + " </button> <br>"
+      }
+      // test.innerHTML = "hahahahahah"
+    }
+
+    function test(fileName) {
+      var url = '/download';
+      var data = { username: username, fileName: fileName };
+      var datatype = 'jsonp';
+
+      function success(response) {
+        // do something here 
+        alert("horayyyy")
+      }
+
+      $.get(url, data, success, datatype)
+    }
+    function Archive() {
       window.location.href = "/archivepage"
     }
 
@@ -111,13 +196,14 @@
     }
 
     function Print() {
-        window.print();
+      window.print();
     }
 
 
-    </script>
-	
-	
-	
-  </body>
+  </script>
+
+
+
+</body>
+
 </html>

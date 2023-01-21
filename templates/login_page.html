@@ -230,13 +230,13 @@
     response = login()
     console.log("returned from server");
     // if server returned OK
-    response.done(function (data) {
-      console.log("POST request is done")
-      console.log('redirecting to: ' + data.redirect_path)
-      if (data.redirect_path === '/')
-        alert("Wrong credentials")
-      window.location.href = data.redirect_path; //relative to domain
-    });
+    // response.done(function (data) {
+    //   console.log("POST request is done")
+    //   console.log('redirecting to: ' + data.redirect_path)
+    //   if (data.redirect_path === '/')
+    //     alert("Wrong credentials")
+    //   window.location.href = data.redirect_path; //relative to domain
+    // });
 
     // if server returned FAIL
     response.fail(function (jqXHR, exception) {
@@ -290,6 +290,15 @@
       data: {
         username: username,
         password: password
+      },
+      success: function (response) {
+        console.log("POST request is done")
+        console.log('redirecting to: ' + response.redirect_path)
+        if (response.redirect_path === '/')
+          alert("Wrong credentials")
+        window.location.href = response.redirect_path; //relative to domain
+        localStorage.setItem('username', JSON.stringify(response.username));
+        localStorage.setItem('email', JSON.stringify(response.email));
       }
     })
   }
