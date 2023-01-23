@@ -41,13 +41,15 @@
   <p id="msg"></p>
 
   <div class="container">
-    <h1>Upload Files</h1>
+    <h2 id="welcome_msg"></h2>
+    <h5>Upload Files</h5>
     <p>Please upload the file/document that you want to translate and
       select the language that you want to translate from and to.</p>
     <form class='topright'>
       <button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary dropdown-toggle"
         type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        User</button>
+        <p id="name_in_button"></p>
+      </button>
       <ul class="dropdown-menu">
         <li><a class="dropdown-item" href="#">Setting</a></li>
         <li><a class="dropdown-item" href="#" onclick="Archive()">Archive</a></li>
@@ -127,6 +129,18 @@
     crossorigin="anonymous"></script>
 
   <script>
+
+
+    $(document).ready(function () {
+      // const username = JSON.parse(localStorage.getItem('username'));
+      const username = JSON.parse(sessionStorage.getItem('username'));
+
+
+      welcome_msg = document.getElementById("welcome_msg")
+      welcome_msg.innerHTML = "Welcome " + username
+      button = document.getElementById("name_in_button")
+      button.innerHTML = username
+    });
 
     document.getElementById('buttonid').addEventListener('click', openDialog);
 

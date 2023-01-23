@@ -50,12 +50,12 @@
 <body>
 
   <div class="container">
-    <h1>Waiting Documents Page</h1>
+    <h2 id="welcome_msg"></h2>
     <p>Documents waiting for you to validate translation:</p>
     <form class='topright'>
       <button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary dropdown-toggle"
         type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        User
+        <p id="name_in_button"></p>
       </button>
       <ul class="dropdown-menu">
         <li><a class="dropdown-item" href="#">Settings</a></li>
@@ -79,14 +79,14 @@
       success: function (res) {
         console.log(res);
         console.log("successfullt returned from server and laoded tester info")
-        loadPageWithFiles(res.files_path, res.waiting_files)
+        loadPageWithFiles(res.files_path, res.waiting_files, res.username)
       }
     })
   });
 
   // ./files/input_files/users/peppa/peppa_FoCKHCEeEv.txt,./files/input_files/users/majdrezik/majdrezik_VAbHpLVjlk.txt
   var fileName
-  function loadPageWithFiles(files_path, num_waiting_files) {
+  function loadPageWithFiles(files_path, num_waiting_files, username) {
     buttons = document.getElementById('buttons')
     var fileNames = files_path.split(","); // [./files/input_files/users/peppa/peppa_FoCKHCEeEv.txt , ./files/input_files/users/majdrezik/majdrezik_VAbHpLVjlk.txt]
     for (let i = 0; i < fileNames.length; i++) {
@@ -98,6 +98,12 @@
         'onclick="loadFile(\'' + fileName[0] + '\',\'' + fileNames[i] + '\')">' + fileName[0] + '</button>'
       console.log(fileName[0])
     }
+    button = document.getElementById("name_in_button")
+    button.innerHTML = username
+    welcome_msg = document.getElementById("welcome_msg")
+    welcome_msg.innerHTML = "Welcome " + username
+    console.log('JSON.stringify(fileName.split("--")[0]) : ' + JSON.stringify(fileName.split("--")[0]))
+
 
   }
 
@@ -122,6 +128,7 @@
         var original_lines = res.original_lines
         var translated_lines = res.translated_lines
         var fileName = res.file_name
+        // sessionStorage.setItem('fileName', JSON.stringify(fileName.split("--")[0]))
         loadTable(fileName, original_lines, translated_lines)
       }
     })
@@ -133,10 +140,13 @@
     // lines = [original_lines, translated_lines]
     console.log(original_lines)
     console.log(translated_lines)
-    localStorage.setItem('original_lines', JSON.stringify(original_lines));
-    localStorage.setItem('translated_lines', JSON.stringify(translated_lines));
+
+    sessionStorage.setItem('original_lines', JSON.stringify(original_lines));
+    sessionStorage.setItem('translated_lines', JSON.stringify(translated_lines));
+    let fileNameSessionStorage = fileName.split("--")[0]
+    sessionStorage.setItem('fileName', JSON.stringify(fileNameSessionStorage))
+    console.log("fileNameSessionStorage: " + fileNameSessionStorage)
     console.log("fileName: " + fileName.split("--")[0])
-    localStorage.setItem('fileName', fileName.split("--")[0])
     window.location.href = "/testerchecktranslation"
 
 

@@ -172,7 +172,8 @@ def get_user_by_name_as_json(username):
         result_user = cursor.execute(user_query, (username,))
         user = cursor.fetchone()
         if (user == None):
-            print("no user with username: " + username + " exists in db")
+            print("get_user_by_name_as_json error: no user with username: " +
+                  username + " exists in db")
         print(f"user as JSON: {json.dumps(user)} ")
         # conn.close()
         cursor.close()
@@ -530,6 +531,8 @@ def get_file_lines_from_server_controller():
         print(translated_path)
         translated_lines = _helper_get_translated_file(translated_path)
         # get translated file ./files/translated_files/
+        print("file name:")
+        print(file_name)
         print("#_translated_lines : ")
         print(len(translated_lines))
         print(translated_lines)
@@ -693,7 +696,10 @@ def tester_get_current_files(language_from, tester_username, input_file_path):
         print("tester_files: " + tester_files)
 
         if tester_files is None or tester_files == "":
+            # ./files/input_files/testers/majd_tester/majd_tester--fkHZGIKcQX.txt
             tester_files_updated = input_file_path
+            print("tester_files_updated:")
+            print(tester_files_updated)
         else:
             tester_files_updated = tester_files + ',' + input_file_path
         cursor.close()
@@ -827,45 +833,13 @@ def read_input_pdf_convert_to_text(input_file):
     global current_logged_user
     reader = PdfReader(input_file)
     number_of_pages = len(reader.pages)
-    # page = reader.pages[0]
-    # text = page.extract_text()
-    # print(text)
-    # files/users/tester3
     input_file_path = return_input_files_path(
         current_logged_user[0], current_logged_user[1]
     )
-
     with open(input_file_path, 'a+') as f:
         for page in reader.pages:   # write the whole text (all pages)
-            # write each item on a new line
-            # f.write("%s" % page.extract_text().replace('\n', '').replace(
-            #     '. ', '.\n\n'))
-
-            # f.write("%s" % page.extract_text().replace(
-            #     '. ', '.\n\n')).replace('\n', '')
             f.write("%s" % page.extract_text().replace(
                 '. ', '.\n\n'))
-
-            # page_with_lines = page.extract_text()
-            # print("$$$$$$ page_with_lines $$$$$$$$$")
-            # print(page_with_lines)
-            # print("$$$$$$$$$$$$$$$")
-            # page_with_lines = page_with_lines.replace(". ", "\n ")
-            # page_with_lines = page_with_lines.replace(".\n", "\n ")
-            # page_as_array = page_with_lines.split("\n ")
-            # print("$$$$$$$$$$$$$$$")
-            # print(page_as_array)
-            # print("$$$$$$$$$$$$$$$")
-            # for line in page_as_array:
-            #     f.write(line)
-            #     f.write("\n")
-            # if (line == ''):
-            #     f.write("\n")
-
-            # pat = ('(?<!Dr)(?<!Esq)\. +(?=[A-Z])')
-            # page_with_lines = re.sub(pat, '.\n', page.extract_text())
-            # f.write(page_with_lines)
-
     return input_file_path, reader   # return the files location and the reader
 
 

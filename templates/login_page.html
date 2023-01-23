@@ -297,8 +297,10 @@
         if (response.redirect_path === '/')
           alert("Wrong credentials")
         window.location.href = response.redirect_path; //relative to domain
-        localStorage.setItem('username', JSON.stringify(response.username));
-        localStorage.setItem('email', JSON.stringify(response.email));
+        // localStorage.setItem('username', JSON.stringify(response.username));
+        // localStorage.setItem('email', JSON.stringify(response.email));
+        sessionStorage.setItem('username', JSON.stringify(response.username));
+        sessionStorage.setItem('email', JSON.stringify(response.email));
       }
     })
   }

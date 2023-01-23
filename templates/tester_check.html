@@ -81,17 +81,19 @@
 	<div class="container">
 		<h1>Checking the translation</h1>
 		<form class='topright'>
-			<button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary dropdown-toggle"
-				type="button" data-bs-toggle="dropdown" aria-expanded="false">
-				User</button>
+			<button style="background:rgb(214, 212, 212); color:black; width: 10vw;" class="btn btn-secondary dropdown-toggle"
+				aria-haspopup="true" data-bs-toggle="dropdown" aria-expanded="false">
+				<p id="name_in_button"></p>
+			</button>
 			<ul class="dropdown-menu">
 				<li><a class="dropdown-item" href="#">Settings</a></li>
 				<li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
 			</ul>
 		</form>
 
-		<button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary topleft"
-			type="button">File</button>
+		<button style=" color:black; width:10vw" class="btn btn-outline-secondary topleft" type="button">
+			<p id="fileName">file: </p>
+		</button>
 		<br>
 		<table style="width:100%; display:block;">
 
@@ -133,9 +135,10 @@
 
 	<script>
 
-		const original_lines = JSON.parse(localStorage.getItem('original_lines'));
-		const translated_lines = JSON.parse(localStorage.getItem('translated_lines'));
-		const fileName = localStorage.getItem('fileName');
+		const original_lines = JSON.parse(sessionStorage.getItem('original_lines'));
+		const translated_lines = JSON.parse(sessionStorage.getItem('translated_lines'));
+		const fileName = JSON.parse(sessionStorage.getItem('fileName'));
+		const username = JSON.parse(sessionStorage.getItem("username"))
 
 		$(document).ready(function () {
 
@@ -154,6 +157,11 @@
 				cell2.contentEditable = true;
 				cell3.innerHTML = '<td style="text-align: center"><input name="cb[]" type="checkbox" id=cb' + i + '></td>'
 			}
+
+			fileNameOnScreen = document.getElementById("fileName")
+			fileNameOnScreen.innerHTML += fileName
+			button = document.getElementById("name_in_button")
+			button.innerHTML = username
 		});
 
 
