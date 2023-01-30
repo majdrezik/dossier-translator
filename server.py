@@ -606,7 +606,7 @@ def post_tester_check_controller():
         )  # username is at index 0
         send_email_controller(user['username'], user['email'], 1)
 
-    return "200"
+    return "sent"
 
 
 def create_exportable_file_from_tester_edits(req):

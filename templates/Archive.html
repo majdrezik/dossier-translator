@@ -67,6 +67,17 @@
 
   <div class="container">
     <h1>Archive</h1>
+    <form class='topright'>
+      <button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary dropdown-toggle"
+        type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <p id="name_in_button"></p>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#">Setting</a></li>
+        <li><a class="dropdown-item" href="#" onclick="Archive()">Archive</a></li>
+        <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+      </ul>
+    </form>
     <!-- <form class='topright'>
       <button style="background:rgb(214, 212, 212); color:black;" class="btn btn-secondary dropdown-toggle"
         type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -114,9 +125,11 @@
 
   <script>
 
-    const username = JSON.parse(localStorage.getItem('username'));
-    const email = JSON.parse(localStorage.getItem('email'));
+    const username = JSON.parse(sessionStorage.getItem('username'));
+    const email = JSON.parse(sessionStorage.getItem('email'));
     $(document).ready(function () {
+      button = document.getElementById("name_in_button")
+      button.innerHTML = username
 
       var user = {
         username: username,
